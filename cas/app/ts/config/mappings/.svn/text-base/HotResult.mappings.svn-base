@@ -1,0 +1,24 @@
+{
+  "mappings": {
+    "hot_spot": {
+      "properties": {
+        "dest_id": {
+          "type": "long"
+        },
+        "dest_name": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "name": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "recommand": {
+          "type": "long"
+        }
+      }
+    }
+  }
+}

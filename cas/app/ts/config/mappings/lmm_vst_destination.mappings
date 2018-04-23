@@ -1,0 +1,624 @@
+{
+	"mappings": {
+		"biz_com_coordinate": {
+			"properties": {
+				"coord_id": {
+					"type": "long",
+					"index": "not_analyzed"
+				},
+				"object_type": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"object_id": {
+					"type": "long",
+					"index": "not_analyzed"
+				},
+				"coord_type": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"search_key": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"address": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart"
+				},
+				"longitude": {
+					"type": "double"
+				},
+				"latitude": {
+					"type": "double"
+				},
+				"update_time": {
+					"type": "long"
+				}
+			}
+		},
+		"biz_district": {
+			"properties": {
+				"cancel_flag": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"city_name": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart"
+				},
+				"city_pin_yin": {
+					"type": "string"
+				},
+				"district_alias": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart"
+				},
+				"district_code": {
+					"type": "string"
+				},
+				"district_id": {
+					"type": "long"
+				},
+				"district_name": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart"
+				},
+				"district_name2": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart"
+				},
+				"district_type": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"en_name": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"foreign_flag": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"hotel_num": {
+					"type": "long"
+				},
+				"local_lang": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"parent_id": {
+					"type": "long"
+				},
+				"pinyin": {
+					"type": "string",
+					"index": "not_analyzed",
+					"boost": 3,
+					"norms": {
+						"enabled": true
+					}
+				},
+				"province_name": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart"
+				},
+				"province_pin_yin": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"short_pinyin": {
+					"type": "string",
+					"index": "not_analyzed",
+					"boost": 3,
+					"norms": {
+						"enabled": true
+					}
+				},
+				"update_time": {
+					"type": "long"
+				},
+				"url_pin_yin": {
+					"type": "string",
+					"index": "not_analyzed"
+				}
+			}
+		},
+		"biz_dest": {
+			"properties": {
+				"cancel_flag": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"dest_alias": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart"
+				},
+				"dest_id": {
+					"type": "long"
+				},
+				"dest_mark": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"dest_name": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart",
+					"boost": 10,
+					"norms": {
+						"enabled": true
+					}
+				},
+				"dest_type": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"district_id": {
+					"type": "long"
+				},
+				"en_name": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"foreign_flag": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"local_lang": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"parent_id": {
+					"type": "long"
+				},
+				"pinyin": {
+					"type": "string",
+					"index": "not_analyzed",
+					"boost": 3,
+					"norms": {
+						"enabled": true
+					}
+				},
+				"short_pinyin": {
+					"type": "string",
+					"index": "not_analyzed",
+					"boost": 3,
+					"norms": {
+						"enabled": true
+					}
+				},
+				"update_time": {
+					"type": "long"
+				}
+			}
+		},
+		"biz_district_sign": {
+			"properties": {
+				"cancel_flag": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"district_id": {
+					"type": "long"
+				},
+				"en_name": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"latitude": {
+					"type": "double"
+				},
+				"local_lang": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"longitude": {
+					"type": "double"
+				},
+				"pinyin": {
+					"type": "string",
+					"index": "not_analyzed",
+					"boost": 3,
+					"norms": {
+						"enabled": true
+					}
+				},
+				"radius": {
+					"type": "long"
+				},
+				"short_pinyin": {
+					"type": "string",
+					"index": "not_analyzed",
+					"boost": 3,
+					"norms": {
+						"enabled": true
+					}
+				},
+				"sign_alias": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart"
+				},
+				"sign_desc": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart"
+				},
+				"sign_id": {
+					"type": "long"
+				},
+				"sign_name": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart"
+				},
+				"sign_type": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"update_time": {
+					"type": "long"
+				}
+			}
+		},
+		"ly_destination": {
+			"properties": {
+				"abroad": {
+					"type": "string"
+				},
+				"cancel_flag": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"coord_type": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"count_been": {
+					"type": "long"
+				},
+				"count_want": {
+					"type": "long"
+				},
+				"dest_alias": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart"
+				},
+				"dest_id": {
+					"type": "long"
+				},
+				"dest_name": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart",
+					"boost": 10,
+					"norms": {
+						"enabled": true
+					}
+				},
+				"dest_type": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"dest_type_name": {
+					"type": "string"
+				},
+				"district_id": {
+					"type": "long"
+				},
+				"district_name": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart"
+				},
+				"district_parent_id": {
+					"type": "string"
+				},
+				"district_parent_ids": {
+					"type": "string"
+				},
+				"district_parent_name": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart"
+				},
+				"district_parent_names": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart"
+				},
+				"en_name": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"ent_sight": {
+					"type": "string"
+				},
+				"g_latitude": {
+					"type": "double"
+				},
+				"g_longitude": {
+					"type": "double"
+				},
+				"heritage": {
+					"type": "string"
+				},
+				"img_url": {
+					"type": "string"
+				},
+				"intro": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart"
+				},
+				"latitude": {
+					"type": "double"
+				},
+				"letter": {
+					"type": "string"
+				},
+				"local_lang": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"longitude": {
+					"type": "double"
+				},
+				"modify_time": {
+					"type": "long"
+				},
+				"parent_id": {
+					"type": "long"
+				},
+				"parent_name": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart"
+				},
+				"parent_names": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart"
+				},
+				"parents": {
+					"type": "string"
+				},
+				"pinyin": {
+					"type": "string",
+					"index": "not_analyzed",
+					"boost": 3,
+					"norms": {
+						"enabled": true
+					}
+				},
+				"protected_area": {
+					"type": "string"
+				},
+				"range": {
+					"type": "long"
+				},
+				"short_pinyin": {
+					"type": "string",
+					"index": "not_analyzed",
+					"boost": 3,
+					"norms": {
+						"enabled": true
+					}
+				},
+				"showed": {
+					"type": "string"
+				},
+				"stage": {
+					"type": "long"
+				},
+				"star": {
+					"type": "long"
+				}
+			}
+		},
+		"ly_district_sign": {
+			"properties": {
+				"abroad": {
+					"type": "string"
+				},
+				"coord_type": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"count_been": {
+					"type": "long"
+				},
+				"count_want": {
+					"type": "long"
+				},
+				"dest_alias": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart"
+				},
+				"dest_id": {
+					"type": "long"
+				},
+				"dest_type_name": {
+					"type": "string"
+				},
+				"dest_name": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart",
+					"boost": 10,
+					"norms": {
+						"enabled": true
+					}
+				},
+				"dest_type": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"district_id": {
+					"type": "long"
+				},
+				"district_name": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart"
+				},
+				"en_name": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"ent_sight": {
+					"type": "string"
+				},
+				"g_latitude": {
+					"type": "double"
+				},
+				"g_longitude": {
+					"type": "double"
+				},
+				"heritage": {
+					"type": "string"
+				},
+				"img_url": {
+					"type": "string"
+				},
+				"intro": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart"
+				},
+				"latitude": {
+					"type": "double"
+				},
+				"letter": {
+					"type": "string"
+				},
+				"local_lang": {
+					"type": "string",
+					"index": "not_analyzed"
+				},
+				"longitude": {
+					"type": "double"
+				},
+				"parent_id": {
+					"type": "long"
+				},
+				"parent_name": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart"
+				},
+				"parent_names": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart"
+				},
+				"parents": {
+					"type": "string"
+				},
+				"pinyin": {
+					"type": "string",
+					"index": "not_analyzed",
+					"boost": 3,
+					"norms": {
+						"enabled": true
+					}
+				},
+				"protected_area": {
+					"type": "string"
+				},
+				"range": {
+					"type": "long"
+				},
+				"short_pinyin": {
+					"type": "string",
+					"index": "not_analyzed",
+					"boost": 3,
+					"norms": {
+						"enabled": true
+					}
+				},
+				"sign_id": {
+					"type": "long"
+				},
+				"stage": {
+					"type": "long"
+				},
+				"star": {
+					"type": "long"
+				},
+				"showed": {
+					"type": "string"
+				},
+				"cancel_flag": {
+					"type": "string",
+					"index": "not_analyzed"
+				}
+			}
+		},
+		"ly_address": {
+			"properties": {
+				"address_id": {
+					"type": "long"
+				},
+				"dest_id": {
+					"type": "long"
+				},
+				"en_address": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart"
+				},
+				"address": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart"
+				},
+				"status": {
+					"type": "long"
+				},
+				"first": {
+					"type": "string"
+				},
+				"update_time": {
+					"type": "long"
+				},
+				"updated_time": {
+					"type": "date",
+					"format": "yyyy-MM-dd HH:mm:ss"
+				}
+			}
+		},
+		"dest_com_city": {
+			"properties": {
+				"city_id": {
+					"type": "long"
+				},
+				"city_name": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart"
+				},
+				"province_id": {
+					"type": "long"
+				},
+				"province_name": {
+					"type": "string",
+					"analyzer": "ik_max_word",
+					"search_analyzer": "ik_smart"
+				},
+				"district_id": {
+					"type": "long"
+				}
+			}
+		}
+	}
+}

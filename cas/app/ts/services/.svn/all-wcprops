@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/app/ts/services
+END
+ImportHaoqiaoService.php
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/app/ts/services/ImportHaoqiaoService.php
+END
+ProductPoolV2AdditionService.php
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/app/ts/services/ProductPoolV2AdditionService.php
+END
+CanalProductPriceSyncService.php
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/app/ts/services/CanalProductPriceSyncService.php
+END
+ProductPoolRedisV2Service.php
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/app/ts/services/ProductPoolRedisV2Service.php
+END
+TravelWorkerService.php
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/app/ts/services/TravelWorkerService.php
+END
+CanalEsWorkerService.php
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/app/ts/services/CanalEsWorkerService.php
+END
+EsWorkerService.php
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/app/ts/services/EsWorkerService.php
+END
+CanalTravelListWorkerService.php
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/app/ts/services/CanalTravelListWorkerService.php
+END
+CanalPromotionSyncService.php
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/app/ts/services/CanalPromotionSyncService.php
+END
+ProductPoolV2Service.php
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/app/ts/services/ProductPoolV2Service.php
+END
+AliyunSyncWorkerService.php
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/app/ts/services/AliyunSyncWorkerService.php
+END
+CanalRedisWorkerService.php
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/app/ts/services/CanalRedisWorkerService.php
+END
+BbsToTravelWorker2Service.php
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/app/ts/services/BbsToTravelWorker2Service.php
+END

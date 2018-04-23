@@ -1,0 +1,11 @@
+{
+    "require": {
+        "phalcon/devtools": "2.0.13",
+        "phalcon/incubator": "2.0.13",
+        "predis/predis": "dev-master",
+        "cboden/ratchet": "dev-master",
+        "twig/twig": "1.*",
+        "pda/pheanstalk": "~3.0",
+	"jpush/jpush": "v3.2.1"
+    }
+}

@@ -1,0 +1,135 @@
+{
+    "mappings": {
+      "productContent": {
+        "properties": {
+          "baiKeContent": {
+            "type": "string",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "baiKeName": {
+            "type": "string",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "baiKeUrl": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "cityName": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "createtime": {
+            "type": "date",
+            "format": "yyyy-MM-dd HH:mm:ss"
+          },
+          "id": {
+            "type": "long"
+          },
+          "productId": {
+            "type": "long"
+          },
+          "productName": {
+            "type": "string",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "provinceName": {
+            "type": "string",
+            "index": "not_analyzed"
+          }
+        }
+      },
+      "productbase": {
+        "properties": {
+          "baiKeContent": {
+            "type": "string",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "baiKeName": {
+            "type": "string",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "baiKeUrl": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "cityName": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "createtime": {
+            "type": "date",
+            "format": "yyyy-MM-dd HH:mm:ss"
+          },
+          "id": {
+            "type": "long"
+          },
+          "productId": {
+            "type": "long"
+          },
+          "productName": {
+            "type": "string",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+          "provinceName": {
+            "type": "string",
+            "index": "not_analyzed"
+          }
+        }
+      },
+       "productsegment": {
+        "properties": {
+          "id": {
+            "type": "long"
+          },
+          "productId": {
+            "type": "long"
+          },
+          "segmentId": {
+            "type": "long"
+          },
+          "createtime": {
+            "type": "date",
+            "format": "yyyy-MM-dd HH:mm:ss"
+          }
+        }
+      },
+      "segment": {
+        "properties": {
+          "id": {
+            "type": "long"
+          },
+	  "segment_name": {
+            "type": "string",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+	  "createtime": {
+            "type": "date",
+            "format": "yyyy-MM-dd HH:mm:ss"
+          }
+        }
+      },
+      "segmentcontent": {
+        "properties": {
+          "pid": {
+            "type": "long"
+          },
+	  "content": {
+            "type": "string",
+            "analyzer": "ik_max_word",
+            "search_analyzer": "ik_smart"
+          },
+	  "createtime": {
+            "type": "date",
+            "format": "yyyy-MM-dd HH:mm:ss"
+          }
+        }
+      }
+    }
+  }

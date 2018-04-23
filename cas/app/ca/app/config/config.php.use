@@ -1,0 +1,139 @@
+<?php
+return new \Phalcon\Config ( array (
+    'dbcore' => array (
+        'master' => array (
+            'host' => '192.168.0.139',
+            'username' => 'root',
+            'password' => '123456',
+            'dbname' => 'lmm_core',
+            'charset' => 'utf8',
+            'persistent' => false
+        ),
+        'slaves' => array (
+            array (
+                'host' => '192.168.0.139',
+                'username' => 'root',
+                'password' => '123456',
+                'dbname' => 'lmm_core',
+                'charset' => 'utf8',
+                'persistent' => false
+            )
+        )
+    ),
+    'dblvyou' => array (
+        'master' => array (
+            'host' => '192.168.0.139',
+            'username' => 'root',
+            'password' => '123456',
+            'dbname' => 'lmm_lvyou',
+            'charset' => 'utf8',
+            'persistent' => false
+        ),
+        'slaves' => array (
+            array (
+                'host' => '192.168.0.139',
+                'username' => 'root',
+                'password' => '123456',
+                'dbname' => 'lmm_lvyou',
+                'charset' => 'utf8',
+                'persistent' => false
+            )
+        )
+    ),
+    'dbmodule' => array (
+        'master' => array (
+            'host' => '192.168.0.139',
+            'username' => 'root',
+            'password' => '123456',
+            'dbname' => 'lmm_module',
+            'charset' => 'utf8',
+            'persistent' => false
+        ),
+        'slaves' => array (
+            array (
+                'host' => '192.168.0.139',
+                'username' => 'root',
+                'password' => '123456',
+                'dbname' => 'lmm_module',
+                'charset' => 'utf8',
+                'persistent' => false
+            )
+        )
+    ),
+    'dbmsg' => array (
+        'master' => array (
+            'host' => '192.168.0.139',
+            'username' => 'root',
+            'password' => '123456',
+            'dbname' => 'lmm_message',
+            'charset' => 'utf8',
+            'persistent' => false
+        ),
+        'slaves' => array (
+            array (
+                'host' => '192.168.0.139',
+                'username' => 'root',
+                'password' => '123456',
+                'dbname' => 'lmm_message',
+                'charset' => 'utf8',
+                'persistent' => false
+            )
+        )
+    ),
+    'dbbaike' => array (
+        'master' => array (
+            'host' => '192.168.0.139',
+            'username' => 'root',
+            'password' => '123456',
+            'dbname' => 'lmm_baike',
+            'charset' => 'utf8',
+            'persistent' => false
+        ),
+        'slaves' => array (
+            array (
+                'host' => '192.168.0.139',
+                'username' => 'root',
+                'password' => '123456',
+                'dbname' => 'lmm_baike',
+                'charset' => 'utf8',
+                'persistent' => false
+            )
+        )
+    ),
+    'dbnewlvyou' => array (
+        'master' => array (
+            'host' => '10.112.4.221',
+            'username' => 'root',
+            'password' => '123456',
+            'dbname' => 'lmm_destination',
+            'charset' => 'utf8',
+            'persistent' => false
+        )
+    ),
+    'redis'=> array(
+        'parameters' => array('host'=>"10.112.4.221","port"=>'6379'),
+        'options' => array()
+    ),
+    'beanstalk' => array(
+        'host' => '10.112.4.221',
+        'port' => 11300
+    ),
+    'template' => array(
+        'path' => '/opt/manualTemplate/'
+    ),
+    'soap' => array(
+            'location' => 'http://106.15.35.46/soap/server.php', // ÉèÖÃserverÂ·¾¶
+            'uri' => 'http://106.15.35.46/soap/server.php',
+            'login' => 'shenxiang',
+            'password' => '132564',
+            'trace' => 1
+        ),
+    'application' => array (
+        'appDir' => __DIR__ . '/../../app/',
+        'sourceDir' => __DIR__ . '/../../../../src/',
+        'libraryDir' => __DIR__ . '/../../../../lib/',
+        'incubatorDir' => __DIR__ . '/../../../../../vendor/phalcon/incubator/Library/Phalcon/',
+        'baseUri' => '/',
+        'debug' => true
+    )
+) );

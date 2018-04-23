@@ -1,0 +1,215 @@
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service
+END
+DestinationContactService.php
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/DestinationContactService.php
+END
+EsDataService.php
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/EsDataService.php
+END
+SeoKeywordUrlDataService.php
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/SeoKeywordUrlDataService.php
+END
+SemAccountReportAllService.php
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/SemAccountReportAllService.php
+END
+MoSubjectService.php
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/MoSubjectService.php
+END
+DestDetailDataService.php
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/DestDetailDataService.php
+END
+DestinationService.php
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/DestinationService.php
+END
+VstDestSumaryDataService.php
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/VstDestSumaryDataService.php
+END
+SctSystemCoreDataService.php
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/SctSystemCoreDataService.php
+END
+MoRecommendService.php
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/MoRecommendService.php
+END
+FoodDestService.php
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/FoodDestService.php
+END
+DestinationGoodsService.php
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/DestinationGoodsService.php
+END
+SemPromotionDataService.php
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/SemPromotionDataService.php
+END
+DistBaseDataService.php
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/DistBaseDataService.php
+END
+EliteImageService.php
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/EliteImageService.php
+END
+SeoKeywordUrlRelatedDataService.php
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/SeoKeywordUrlRelatedDataService.php
+END
+MonthrecDataService.php
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/MonthrecDataService.php
+END
+DestinBaseDataService.php
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/DestinBaseDataService.php
+END
+StaffRoleDataService.php
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/StaffRoleDataService.php
+END
+ProductInfoDataService.php
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/ProductInfoDataService.php
+END
+DataServiceBase.php
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/DataServiceBase.php
+END
+ProductPoolProductService.php
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/ProductPoolProductService.php
+END
+DestinationAddressService.php
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/DestinationAddressService.php
+END
+DestinationFoodService.php
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/DestinationFoodService.php
+END
+DestinationTransportationService.php
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/DestinationTransportationService.php
+END
+SemReportEsDataService.php
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/SemReportEsDataService.php
+END
+DestinationDataService.php
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/DestinationDataService.php
+END
+MoRecommendBlockService.php
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/MoRecommendBlockService.php
+END
+MoSubjectRelationService.php
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/MoSubjectRelationService.php
+END
+GoodsDestService.php
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/GoodsDestService.php
+END
+RedisDataService.php
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/RedisDataService.php
+END
+DestinationTimeService.php
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/DestinationTimeService.php
+END
+MoAttachmentsService.php
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/MoAttachmentsService.php
+END
+DestinationTripRelDataService.php
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/DestinationTripRelDataService.php
+END
+DestBaseDataService.php
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Lvmama/Cas/Service/DestBaseDataService.php
+END

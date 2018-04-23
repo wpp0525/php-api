@@ -1,0 +1,209 @@
+{
+  "mappings": {
+    "qa_admin_answer": {
+      "properties": {
+        "id": {
+          "type": "long"
+        },
+        "question_id": {
+          "type": "long"
+        },
+        "admin_id": {
+          "type": "long"
+        },
+        "content": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "status": {
+          "type": "long"
+        },
+        "create_time": {
+          "type": "long"
+        },
+        "update_time": {
+          "type": "long"
+        }
+      }
+    },
+    "qa_answer": {
+      "properties": {
+        "id": {
+          "type": "long"
+        },
+        "question_id": {
+          "type": "long"
+        },
+        "uid": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "content": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "auditor_id": {
+          "type": "long"
+        },
+        "audit_time": {
+          "type": "long"
+        },
+        "main_status": {
+          "type": "long"
+        },
+        "recommend_point": {
+          "type": "long"
+        },
+        "del_status": {
+          "type": "long"
+        },
+        "create_time": {
+          "type": "long"
+        },
+        "update_time": {
+          "type": "long"
+        }
+      }
+    },
+    "qa_answer_comment": {
+      "properties": {
+        "id": {
+          "type": "long"
+        },
+        "answer_id": {
+          "type": "long"
+        },
+        "uid": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "commented_uid": {
+          "type": "string"
+        },
+        "commented_username": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "content": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "auditor_id": {
+          "type": "long"
+        },
+        "audit_time": {
+          "type": "long"
+        },
+        "main_status": {
+          "type": "long"
+        },
+        "del_status": {
+          "type": "long"
+        },
+        "create_time": {
+          "type": "long"
+        },
+        "update_time": {
+          "type": "long"
+        }
+      }
+    },
+    "qa_question": {
+      "properties": {
+        "id": {
+          "type": "long"
+        },
+        "uid": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "title": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "content": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "auditor_id": {
+          "type": "long"
+        },
+        "audit_time": {
+          "type": "long"
+        },
+        "main_status": {
+          "type": "long"
+        },
+        "recommend_status": {
+          "type": "long"
+        },
+        "recommend_point": {
+          "type": "long"
+        },
+        "del_status": {
+          "type": "long"
+        },
+        "create_time": {
+          "type": "long"
+        },
+        "update_time": {
+          "type": "long"
+        }
+      }
+    },
+    "qa_tag": {
+      "properties": {
+        "id": {
+          "type": "long"
+        },
+        "category_id": {
+          "type": "long"
+        },
+        "name": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "status": {
+          "type": "long"
+        }
+      }
+    },
+    "qa_tag_category": {
+      "properties": {
+        "id": {
+          "type": "long"
+        },
+        "name": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "status": {
+          "type": "long"
+        },
+        "exclusive": {
+          "type": "long"
+        }
+      }
+    }
+  }
+}

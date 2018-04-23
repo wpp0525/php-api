@@ -1,0 +1,175 @@
+{
+  "mappings": {
+    "seo_category": {
+      "properties": {
+        "id": {
+          "type": "long"
+        },
+        "category": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "url": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "parent_id": {
+          "type": "long"
+        },
+        "update_time": {
+          "type": "date",
+          "format": "yyyy-MM-dd HH:mm:ss"
+        }
+      }
+    },
+    "seo_crawler_url": {
+      "properties": {
+        "id": {
+          "type": "long"
+        },
+        "title": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "url": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "channel_id": {
+          "type": "long"
+        },
+        "create_time": {
+          "type": "date",
+          "format": "yyyy-MM-dd HH:mm:ss"
+        }
+      }
+    },
+    "seo_keyword_url": {
+      "properties": {
+        "id": {
+          "type": "long"
+        },
+        "keyword_id": {
+          "type": "long"
+        },
+        "keyword_title": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "keyword_url": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "channel_id": {
+          "type": "long"
+        },
+        "url_id": {
+          "type": "long"
+        },
+        "url": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "display_limit": {
+          "type": "long"
+        },
+        "rule": {
+          "type": "long"
+        }
+      }
+    },
+    "seo_keyword_url_related": {
+      "properties": {
+        "id": {
+          "type": "long"
+        },
+        "url_id": {
+          "type": "long"
+        },
+        "url": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "keyword_id": {
+          "type": "long"
+        },
+        "channel_id": {
+          "type": "long"
+        },
+        "related_id": {
+          "type": "long"
+        },
+        "related_title": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "relation_url": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "display_limit": {
+          "type": "long"
+        },
+        "rule": {
+          "type": "long"
+        }
+      }
+    },
+    "seo_manual_crawler": {
+      "properties": {
+        "id": {
+          "type": "long"
+        },
+        "manual_url_id": {
+          "type": "long"
+        },
+        "crawler_url_id": {
+          "type": "long"
+        }
+      }
+    },
+    "seo_manual_url": {
+      "properties": {
+        "id": {
+          "type": "long"
+        },
+        "category_id": {
+          "type": "long"
+        },
+        "channel_id": {
+          "type": "long"
+        },
+        "url": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "keyword": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "max_match_times": {
+          "type": "long"
+        },
+        "status": {
+          "type": "long"
+        },
+        "crawl_status": {
+          "type": "long"
+        },
+        "create_time": {
+          "type": "date",
+          "format": "yyyy-MM-dd HH:mm:ss"
+        },
+        "update_time": {
+          "type": "date",
+          "format": "yyyy-MM-dd HH:mm:ss"
+        }
+      }
+    }
+  }
+}

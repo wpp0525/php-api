@@ -1,0 +1,8 @@
+<?php
+	CONST PARAMS_ERROR = 100001;//参数错误
+
+	CONST OPERATION_FAILED = 100002;//操作失败
+    CONST DATA_NOT_FOUND =10003; //未找到要查询的数据
+	
+
+	

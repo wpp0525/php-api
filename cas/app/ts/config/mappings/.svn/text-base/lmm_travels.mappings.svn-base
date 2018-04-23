@@ -1,0 +1,398 @@
+{
+  "mappings": {
+    "tr_travel": {
+      "properties": {
+        "id": {
+          "type": "long"
+        },
+        "uid": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "seo_title": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "summary": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "thumb": {
+          "type": "string"
+        },
+        "start_time": {
+          "type": "long"
+        },
+        "publish_time": {
+          "type": "long"
+        },
+        "order_num": {
+          "type": "long"
+        },
+        "losc_inner": {
+          "type": "string"
+        },
+        "losc_outer": {
+          "type": "string"
+        },
+        "status": {
+          "type": "long"
+        },
+        "recommend_status": {
+          "type": "long"
+        },
+        "create_time": {
+          "type": "long"
+        },
+        "update_time": {
+          "type": "long"
+        }
+      }
+    },
+    "tr_travel_content": {
+      "properties": {
+        "id": {
+          "type": "long"
+        },
+        "travel_id": {
+          "type": "long"
+        },
+        "title": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "content": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "order_num": {
+          "type": "long"
+        },
+        "sync_status": {
+          "type": "long"
+        },
+        "create_time": {
+          "type": "long"
+        },
+        "update_time": {
+          "type": "long"
+        }
+      }
+    },
+    "tr_video": {
+      "properties": {
+        "id": {
+          "type": "long"
+        },
+        "partner_name": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "poster": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "description": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "delete_status": {
+          "type": "string"
+        }
+      }
+    },
+    "tr_video_brand": {
+      "properties": {
+        "id": {
+          "type": "long"
+        },
+        "video_id": {
+          "type": "long"
+        },
+        "brand_name": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "brand_image": {
+          "type": "string"
+        }
+      }
+    },
+    "tr_video_relation": {
+      "properties": {
+        "id": {
+          "type": "long"
+        },
+        "video_id": {
+          "type": "long"
+        },
+        "video_name": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "url": {
+          "type": "string"
+        },
+        "dest_id": {
+          "type": "long"
+        },
+        "dest_name": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "category": {
+          "type": "long"
+        },
+        "order_num": {
+          "type": "long"
+        },
+        "source": {
+          "type": "string"
+        },
+        "delete_status": {
+          "type": "string"
+        }
+      }
+    },
+    "ly_s_text": {
+      "properties": {
+        "segment_id": {
+          "type": "long"
+        },
+        "memo": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        }
+      }
+    },
+    "ly_tag": {
+      "properties": {
+        "tag_id": {
+          "type": "long"
+        },
+        "tag_type": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "tag_name": {
+          "type": "string"
+        },
+        "status": {
+          "type": "long"
+        }
+      }
+    },
+    "ly_trip": {
+      "properties": {
+        "trip_id": {
+          "type": "long"
+        },
+        "title": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "seo_title": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "thumb": {
+          "type": "string"
+        },
+        "order_id": {
+          "type": "long"
+        },
+        "product_id": {
+          "type": "long"
+        },
+        "product_name": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "prduct_dest_id": {
+          "type": "long"
+        },
+        "visit_time": {
+          "type": "long"
+        },
+        "cost": {
+          "type": "double"
+        },
+        "visit_type": {
+          "type": "string"
+        },
+        "uid": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "userimg": {
+          "type": "string"
+        },
+        "memo": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "create_time": {
+          "type": "long"
+        },
+        "publish_time": {
+          "type": "long"
+        },
+        "modify_time": {
+          "type": "long"
+        },
+        "order_status": {
+          "type": "string"
+        },
+        "copy": {
+          "type": "string"
+        },
+        "elite": {
+          "type": "string"
+        },
+        "verify": {
+          "type": "long"
+        },
+        "finished": {
+          "type": "string"
+        },
+        "user_status": {
+          "type": "long"
+        },
+        "showed": {
+          "type": "string"
+        },
+        "deleted": {
+          "type": "string"
+        },
+        "valid": {
+          "type": "string"
+        },
+        "seq": {
+          "type": "long"
+        },
+        "ip": {
+          "type": "string"
+        },
+        "init_hits": {
+          "type": "long"
+        },
+        "init_praise": {
+          "type": "long"
+        },
+        "count_share": {
+          "type": "long"
+        },
+        "day_count": {
+          "type": "long"
+        },
+        "source": {
+          "type": "string"
+        },
+        "losc_in": {
+          "type": "string"
+        },
+        "losc_out": {
+          "type": "string"
+        },
+        "app_thumb": {
+          "type": "string"
+        },
+        "app_seq": {
+          "type": "long"
+        },
+        "app_zip": {
+          "type": "string"
+        },
+        "port": {
+          "type": "long"
+        },
+        "xls_source": {
+          "type": "string"
+        }
+      }
+    },
+    "tr_app_travel": {
+      "properties": {
+        "id": {
+          "type": "long"
+        },
+        "uid": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "title": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "seo_title": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "memo": {
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_smart"
+        },
+        "thumb": {
+          "type": "string"
+        },
+        "start_time": {
+          "type": "long"
+        },
+        "publish_time": {
+          "type": "long"
+        },
+        "order_num": {
+          "type": "long"
+        },
+        "losc_inner": {
+          "type": "string"
+        },
+        "losc_outer": {
+          "type": "string"
+        },
+        "status": {
+          "type": "long"
+        },
+        "recommend_status": {
+          "type": "long"
+        },
+        "create_time": {
+          "type": "long"
+        },
+        "update_time": {
+          "type": "long"
+        }
+      }
+    }
+  }
+}

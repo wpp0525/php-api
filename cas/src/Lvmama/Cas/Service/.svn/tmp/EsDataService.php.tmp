@@ -1,0 +1,945 @@
+<?php
+
+namespace Lvmama\Cas\Service;
+
+use Phalcon\Db\AdapterInterface;
+use Phalcon\DiInterface;
+use Lvmama\Cas\Service\DataServiceBase;
+use Lvmama\Common\Utils\Misc;
+use Lvmama\Common\Components\ApiClient;
+
+/**
+ * 主站用户 服务类
+ *
+ * @author sx
+ *
+ */
+class EsDataService extends DataServiceBase
+{
+	protected $baseUri = 'http://172.20.4.178:9200/';
+	private $ttl = 1800;
+	private $session_id = '';
+	protected $stop_word = array('个', '张', '杯', '种', '楼', '行', '条', '朵', '只', '瓶', '份', '年', '度', '方', '幅', '级', '代', '派', '处', '座', '钟', '场', '群', '根', '部', '块', '栋', '两', '位', '头', '层', '圈', '件', '名', '十', '时', '家', '秒', '套', '百', '千', '万', '课', '族', '院', '段', '节', '班', '生', '大', '小', '刻', '间', '步', '桌', '餐', '副', '元', '人', '站', '类', '双', '颗', '池', '转', '幕', '趟', '艘', '对', '中', '顿', '篇', '次', '岁', '里', '辈', '缕', '回', '遍', '日', '项', '股', '声', '组', '夜', '句', '把', '栏', '列', '幢', '排', '款', '分', '脚', '支', '等', '餐', '袋', '打', '斤', '听', '号', '碗', '字', '辆', '串', '束', '台', '折', '盏', '笔', '倍');
+	public function __construct($di, $redis = null, $beanstalk = null)
+	{
+		$this->di = $di;
+		$this->redis = $redis;
+		$this->beanstalk = $beanstalk;
+		if ($di->get('config')->elasticsearch->toArray()) {
+			$this->baseUri = 'http://' . $di->get('config')->elasticsearch->toArray()['host'] . ':' . $di->get('config')->elasticsearch->toArray()['port'];
+		}
+		$this->client = new ApiClient($this->baseUri);
+	}
+
+	public function getDest(
+		$keyword,
+		$must_not = array(),
+		$fields = '',
+		$like_fields = '',
+		$where = array(),
+		$order_by = array(),
+		$group_by = array(),
+		$limit = array(),
+		$type = 'ly_destination'
+	)
+	{
+		if (!$keyword) return array();
+		$_fields = $fields ? '"' . str_replace(',', '","', $fields) . '"' : '';
+		$_like_fields = $like_fields ? explode(',', str_replace('`', '', $like_fields)) : array();
+		if (!isset($limit['page'])) $limit['page'] = 1;
+		if (!isset($limit['pageSize'])) $limit['pageSize'] = 5;
+		if ($limit['pageSize'] > 35) $limit['pageSize'] = 35;
+		$not_in_query = '';
+		$in_query = '';
+		$like_query = '';
+		$order_by_query = '';
+		$group_by_query = '';
+		$_sql_where = '';
+		$abroad = false;//看下must或者must_not中是否有强制执行境内或境外
+		$dest_type = false;
+		$tmp = array();
+		foreach ($where as $k => $v) {
+			$abroad = (!$abroad && $k == 'abroad') ? true : false;
+			$dest_type = (!$dest_type && $k == 'dest_type') ? true : false;
+			$tmp[] = '{"terms":{"' . $k . '":["' . str_replace(' ','","',$v) . '"]}}';
+		}
+		$type_n = 0;
+		if (preg_match('/(机场|站|商圈|酒店|宾馆)$/i', $keyword)) {
+			$type .= ',ly_district_sign';
+			if (preg_match('/机场$/',$keyword)) {
+				$tmp[] = '{"match":{"dest_type":"AIRPORT"}}';
+				$type_n++;
+			}
+			if (preg_match('/站$/',$keyword)) {
+				$tmp[] = '{"terms":{"dest_type":["TRAIN","BUS","RAILWAY"]}}';
+				$type_n++;
+			}
+			if (preg_match('/酒店$/',$keyword) || preg_match('/宾馆$/',$keyword)) {
+				$tmp[] = '{"match":{"dest_type":"HOTEL"}}';
+				$type_n++;
+			}
+		}
+		if($type_n > 1){
+			$like_query = implode(',',$tmp);
+		}else{
+			$in_query = '"must":[' . implode(',', $tmp) . ']';
+		}
+		$tmp = array();
+		foreach ($must_not as $key => $val) {
+			$abroad = (!$abroad && $k == 'abroad') ? true : false;
+			$tmp[] = '{"terms":{"' . $key . '":["' . str_replace(' ','","',$val) . '"]}}';
+		}
+		$not_in_query = ($in_query ? ',' : '') . '"must_not":[' . implode(',', $tmp) . ']';
+		if ($_like_fields) {
+			$tmp = array();
+			//如果查询关键字含中文,不对拼音字段搜索
+			$is_chinese = preg_match('/[\x80-\xff]{3,15}/', $keyword);
+			foreach ($_like_fields as $f) {
+				if ($is_chinese && ($f == 'pinyin' || $f == 'en_name' || $f == 'short_pinyin' || $f == 'letter')) continue;
+				$tmp[] = '{"match":{"' . $f . '":"' . $keyword . '"}}';
+			}
+			$like_query .= ($like_query ? ',' : '').implode(',', $tmp);
+		}
+		if ($order_by) {
+			$tmp = array();
+			foreach ($order_by as $k => $v) {
+				$tmp[] = '{"' . $k . '":{"order":"' . $v . '"}}';
+			}
+			$order_by_query = implode(',', $tmp);
+		}
+		if ($group_by) {
+			$tmp = array();
+			foreach ($group_by as $v) {
+				$tmp[] = '"group_by_' . $v . '": {"terms": {"field": "' . $v . '"}}';
+			}
+			$group_by_query = implode(',', $tmp);
+		}
+		$start = ($limit['page'] - 1) * $limit['pageSize'];
+		$query = '{"query":{"bool":{' . $in_query . $not_in_query . ($in_query || $not_in_query ? ',' : '') . '"should":[' . $like_query . '],"minimum_should_match": 1}},"from":' . $start . ',"size":' . $limit['pageSize'] . ',"_source":[' . $_fields . '],"sort":[' . $order_by_query . '],"aggs":{' . $group_by_query . '}}';
+		$res = $this->client->exec('lmm_lvyou/' . $type . '/_search?preference=_primary_first', $query, '', 'POST');
+		if (isset($res['hits']) && count($res['hits']['hits'])) {
+			$result = array(
+				'list' => $res['hits']['hits'],
+				'pages' => array(
+					'itemCount' => $res['hits']['total'],
+					'pageCount' => ceil($res['hits']['total'] / $limit['pageSize']),
+					'page' => $limit['page'],
+					'pageSize' => $limit['pageSize']
+				)
+			);
+		} else {
+			$result = array('list' => array(), 'pages' => array('itemCount' => 0, 'pageCount' => 0, 'page' => $limit['page'], 'pageSize' => $limit['pageSize']));
+		}
+		$self_match = array();//php自己匹配出来的
+		$tmp_data = array();
+		$flag = 0;
+		$recommands = $this->getDestRecommand($keyword, 'VIEWSPOT', 1, 10);
+		if(isset($recommands['list']) && count($recommands['list'])){
+			foreach($recommands['list'] as $v){
+				$tmp_data[] = $v['dest_id'];
+				if ($flag >= $limit['pageSize']) break;
+				$flag++;
+			}
+		}
+		if ($tmp_data) {
+			$tmp = array();
+			//把es查出来了又在php匹配出来的es中的去掉
+			foreach ($result['list'] as $r) {
+				$es_ids[] = $r['_id'];
+				if (!in_array($r['_id'], $tmp_data)) {
+					$tmp[] = $r;
+				}
+			}
+			$result['list'] = $tmp;
+			//先取出符合条件的数量,因es查出来的数量不准确,暂时使用mysql查表
+			$ids = $this->getCountByWhere(array('ids' => $tmp_data, 'where' => $_sql_where));
+			$n = count($ids);
+			$result['pages']['itemCount'] += $n;
+			$result['pages']['pageCount'] = ceil($result['pages']['itemCount'] / $limit['pageSize']);
+			$selfTotalPage = ceil($n / $limit['pageSize']);
+			if ($limit['page'] <= $selfTotalPage) {
+				$start_k = (($limit['page'] - 1) * $limit['pageSize']) - 1;
+				foreach ($ids as $k => $id) {
+					if ($k >= $start_k && $k < $start_k + $limit['pageSize']) {
+						$tmp = $this->getDestByEs(array('ids' => array($id), 'type' => $type, 'source' => $_fields));
+						if ($tmp) $self_match[] = $tmp;
+					}
+				}
+			}
+			if (count($self_match) >= $limit['pageSize']) {
+				$result['list'] = $self_match;
+			} else {
+				$result['list'] = $self_match ? array_merge($self_match, $result['list']) : $result['list'];
+				//做下排重工作
+				$tmp = array();
+				$list = array();
+				foreach ($result['list'] as $k => $v) {
+					if (in_array($v['_source']['dest_id'], $tmp)) {
+						continue;
+					}
+					$tmp[] = $v['_source']['dest_id'];
+					$list[] = $v;
+				}
+				//把多余的条数去掉
+				$i = 0;
+				$result['list'] = array();
+				foreach ($list as $k => $v) {
+					if ($i >= $limit['pageSize']) {
+						continue;
+					}
+					$i++;
+					$result['list'][] = $v;
+				}
+			}
+		}
+		return $result;
+	}
+
+	private function getCountByWhere($data = array())
+	{
+		if (!isset($data['ids'])) return 0;
+		$where = isset($data['where']) ? $data['where'] : '';
+		$dest = $this->di->get('cas')->get('destination-data-service');
+		$ids = $dest->getRsBySql("SELECT `dest_id` FROM ly_destination WHERE cancel_flag = 'Y' AND showed = 'Y' AND dest_id IN(" . implode(',', $data['ids']) . "){$where}");
+		$rs = array();
+		if ($ids) {
+			foreach ($ids as $v) {
+				$rs[] = $v['dest_id'];
+			}
+		}
+		return $rs;
+	}
+
+	private function getDestByEs($data = array())
+	{
+		if (!$data) return array();
+		$tmp = array();
+		foreach ($data['ids'] as $id) {
+			$tmp[] = '{"term":{"dest_id":"' . $id . '"}}';
+		}
+		$query = '{"query":{"bool":{"should":[' . implode(',', $tmp) . ']}},"_source":[' . $data['source'] . '],"from":0,"size":' . count($data['ids']) . '}';
+		$res = $this->client->exec('lmm_lvyou/' . $data['type'] . '/_search?preference=_primary_first', $query, '', 'POST');
+		return isset($res['hits']['hits'][0]) ? $res['hits']['hits'][0] : array();
+	}
+
+	//精确查询目的地ID
+	public function getIdByName($dest_name)
+	{
+		$query = '{
+"_source": ["dest_id","dest_name","dest_type"],
+"query": {
+"function_score": {
+  "query": {
+	"bool": {
+	  "should": [
+		{"query_string": {"default_field": "dest_name","query": "' . $dest_name . '"}}
+	  ]
+	}
+  },
+  "functions": [
+	{"filter": {"term": {"dest_type": "CITY"}},"weight": 15},
+	{"filter": {"term": {"dest_type": "SPAN_CITY"}},"weight": 14},
+	{"filter": {"term": {"dest_type": "PROVINCE"}},"weight": 13},
+	{"filter": {"term": {"dest_type": "SPAN_PROVINCE"}},"weight": 12},
+	{"filter": {"term": {"dest_type": "COUNTRY"}},"weight": 11},
+	{"filter": {"term": {"dest_type": "SPAN_COUNTRY"}},"weight": 10},
+	{"filter": {"term": {"dest_type": "SPAN_TOWN"}},"weight": 9},
+	{"filter": {"term": {"dest_type": "TOWN"}},"weight": 8},
+	{"filter": {"term": {"dest_type": "SCENIC"}},"weight": 7},
+	{"filter": {"term": {"dest_type": "VIEWSPOT"}},"weight": 6},
+	{"filter": {"term": {"dest_type": "SCENIC_ENTERTAINMENT"}},"weight": 5},
+	{"filter": {"term": {"dest_type": "RESTAURANT"}},"weight": 4},
+	{"filter": {"term": {"dest_type": "HOTEL"}},"weight": 3}
+	 ],
+  "score_mode": "sum"
+}
+}
+}';
+		$res = $this->client->exec('lmm_lvyou/_search?preference=_primary_first', $query, '', 'POST');
+		$return = array();
+		if (isset($res['hits']['hits'])) {
+			foreach ($res['hits']['hits'] as $v) {
+				if (isset($v['_source']['dest_name']) && $v['_source']['dest_name'] == $dest_name) {
+					$return = $v['_source'];
+					break;
+				}
+			}
+		}
+		if(!$return){
+			$query = '{"_source": ["dest_id","dest_name"],"query": {"match": {"dest_name": "'.$dest_name.'"}},"size": 5}';
+			$res = $this->client->exec('lmm_lvyou/_search?preference=_primary_first', $query, '', 'POST');
+			$return = array();
+			if (isset($res['hits']['hits'])) {
+				foreach ($res['hits']['hits'] as $v) {
+					if (isset($v['_source']['dest_name']) && $v['_source']['dest_name'] == $dest_name) {
+						$return = $v['_source'];
+						break;
+					}
+				}
+			}
+<<<<<<< .mine
+//			if(!$return){
+			if(!$result){
+				$query = '{"_source": ["dest_id","dest_name"],"query": {"term": {"dest_name": "'.$dest_name.'"}},"size": 5}';
+				$res = $this->client->exec('lmm_lvyou/_search?preference=_primary_first', $query, '', 'POST');
+				$return = array();
+				if (isset($res['hits']['hits'])) {
+					foreach ($res['hits']['hits'] as $v) {
+						if (isset($v['_source']['dest_name']) && $v['_source']['dest_name'] == $dest_name) {
+							$return = $v['_source'];
+							break;
+						}
+					}
+				}
+			}
+			if ($return) $this->redis->setex($redis_key, $this->ttl, json_encode($return));
+		} else {
+			$return = json_decode($content, true);
+=======
+>>>>>>> .r3538
+		}
+		return $return;
+	}
+
+	//查询目的地名称与相应ID的集合
+	public function getIdsByNames($dest_names = array(), $fields = array())
+	{
+		if (!$dest_names || count($dest_names) > 1000) return array();
+		$fields_string = $fields ? '"' . implode('","', $fields) . '"' : '';
+		$return = array();
+		foreach ($dest_names as $n) {
+			$query = '{
+  "_source": [' . $fields_string . '],
+  "from":0,
+  "size":30,
+  "query": {
+    "function_score": {
+      "query": {
+        "bool": {
+          "should": [
+            {"query_string": {"default_field": "dest_name","query": "' . $n . '"}}
+          ]
+        }
+      },
+      "functions": [
+        {"filter": {"term": {"dest_type": "CITY"}},"weight": 15},
+        {"filter": {"term": {"dest_type": "SPAN_CITY"}},"weight": 14},
+        {"filter": {"term": {"dest_type": "PROVINCE"}},"weight": 13},
+        {"filter": {"term": {"dest_type": "SPAN_PROVINCE"}},"weight": 12},
+        {"filter": {"term": {"dest_type": "COUNTRY"}},"weight": 11},
+        {"filter": {"term": {"dest_type": "SPAN_COUNTRY"}},"weight": 10},
+        {"filter": {"term": {"dest_type": "SPAN_TOWN"}},"weight": 9},
+        {"filter": {"term": {"dest_type": "TOWN"}},"weight": 8},
+        {"filter": {"term": {"dest_type": "SCENIC"}},"weight": 7},
+        {"filter": {"term": {"dest_type": "VIEWSPOT"}},"weight": 6},
+        {"filter": {"term": {"dest_type": "SCENIC_ENTERTAINMENT"}},"weight": 5},
+        {"filter": {"term": {"dest_type": "RESTAURANT"}},"weight": 4},
+        {"filter": {"term": {"dest_type": "HOTEL"}},"weight": 3}
+         ],
+      "score_mode": "sum"
+    }
+  }
+}';
+			$tmp = array();
+			$res = $this->client->exec('lmm_lvyou/_search?preference=_primary_first', $query, '', 'POST');
+			if (isset($res['hits']['hits'])) {
+				foreach ($res['hits']['hits'] as $v) {
+					if (isset($v['_source']['dest_name']) && $v['_source']['dest_name'] == $n) {
+						$tmp = $v['_source'];
+						break;
+					}
+				}
+			}
+			if(!$tmp){
+				$query = '{"_source": ["dest_id","dest_name"],"query": {"match": {"dest_name": "'.$n.'"}},"size": 5}';
+				$res = $this->client->exec('lmm_lvyou/_search?preference=_primary_first', $query, '', 'POST');
+				$tmp = array();
+				if (isset($res['hits']['hits'])) {
+					foreach ($res['hits']['hits'] as $v) {
+						if (isset($v['_source']['dest_name']) && $v['_source']['dest_name'] == $n) {
+							$tmp = $v['_source'];
+							break;
+						}
+					}
+				}
+			}
+			if ($tmp) {
+				$return[$n] = $tmp;
+			}
+		}
+		return $return;
+	}
+
+	public function getLike($data = array())
+	{
+	}
+
+	public function getArticleWord($content = '')
+	{
+		$res = $this->client->exec('lmm_lvyou/_analyze?analyzer=ik_smart', json_encode(array('text' => $content)), '', 'POST');
+		$return = array();
+		if (isset($res['tokens'])) {
+			foreach ($res['tokens'] as $v) {
+				if ($v['end_offset'] - $v['start_offset'] > 1 && !in_array($v['token'], $return)) {
+					if (preg_match('/^\d+/', $v['token']) || preg_match('/^[\w|\.|&|\-|@|\+|\#|_]+$/', $v['token']))
+						continue;
+					else
+						$return[] = $v['token'];
+				}
+			}
+			$tmp = array();
+			foreach ($return as $v) {
+				$w = mb_substr($v, -3);
+				if (mb_strlen($v) < 10 && in_array($w, $this->stop_word)) {
+					continue;
+				}
+				$tmp[] = $v;
+			}
+			$return = $tmp;
+		}
+		return $return;
+	}
+
+	/**
+	 * 交通点到点搜索
+	 * @param $keyword
+	 * @param array $must_not
+	 * @param string $fields
+	 * @param string $like_fields
+	 * @param array $where
+	 * @param array $order_by
+	 * @param array $group_by
+	 * @param array $limit
+	 * @param string $type
+	 * @param string $index
+	 * @return array
+	 */
+	public function getWaySearch(
+		$keyword,
+		$must_not = array(),
+		$fields = '',
+		$like_fields = '',
+		$where = array(),
+		$order_by = array(),
+		$group_by = array(),
+		$limit = array(),
+		$type = 'ly_destination,ly_district_sign',
+		$index = 'lmm_lvyou'
+	)
+	{
+		if (!$keyword) return array();
+		$_fields = $fields ? '"' . str_replace(',', '","', $fields) . '"' : '';
+		$_like_fields = $like_fields ? explode(',', str_replace('`', '', $like_fields)) : array();
+		if (!isset($limit['page'])) $limit['page'] = 1;
+		if (!isset($limit['pageSize'])) $limit['pageSize'] = 5;
+		if ($limit['pageSize'] > 35) $limit['pageSize'] = 35;
+		$not_in_query = '';
+		$in_query = '';
+		$like_query = '';
+		$order_by_query = '';
+		$group_by_query = '';
+		if ($where) {
+			$tmp = array();
+			foreach ($where as $k => $v) {
+				$tmp[] = '{"query_string":{"default_field":"' . $k . '","query":"' . $v . '"}}';
+			}
+			$in_query = $tmp ? '"must":[' . implode(',', $tmp) . ']' : '';
+		}
+		if ($must_not) {
+			$tmp = array();
+			foreach ($must_not as $key => $val) {
+				$tmp[] = '{"query_string":{"default_field":"' . $key . '","query":"' . $val . '"}}';
+			}
+			$not_in_query = ($in_query ? ',' : '') . '"must_not":[' . implode(',', $tmp) . ']';
+		}
+		if ($_like_fields) {
+			$tmp = array();
+			foreach ($_like_fields as $f) {
+				$tmp[] = '{"query_string":{"default_field":"' . $f . '","query":"' . $keyword . '"}}';
+			}
+			$like_query = implode(',', $tmp);
+		}
+		if ($order_by) {
+			$tmp = array();
+			foreach ($order_by as $k => $v) {
+				$tmp[] = '{"' . $k . '":{"order":"' . $v . '"}}';
+			}
+			$order_by_query = ',"sort":['.implode(',', $tmp).']';
+		}
+		if ($group_by) {
+			$tmp = array();
+			foreach ($group_by as $v) {
+				$tmp[] = '"group_by_' . $v . '": {"terms": {"field": "' . $v . '"}}';
+			}
+			$group_by_query = ',"aggs":{'.implode(',', $tmp)."}";
+		}
+		$start = ($limit['page'] - 1) * $limit['pageSize'];
+		$query = '{"query":{"bool":{' . $in_query . $not_in_query . ($in_query || $not_in_query ? ',' : '') . '"should":[' . $like_query . ']}},"from":' . $start . ',"size":' . $limit['pageSize'] . ',"_source":[' . $_fields . ']' . $order_by_query . $group_by_query . '}';
+		$redis_key = RedisDataService::REDIS_ES_WAY_SEARCH . md5($query);
+		$content = $this->redis->get($redis_key);
+		if (!$content || $content == 'null') {
+			$res = $this->client->exec($index . '/' . $type . '/_search?preference=_primary_first', $query, '', 'POST');
+			if (isset($res['hits']) && count($res['hits']['hits'])) {
+				$result = array(
+					'list' => $res['hits']['hits'],
+					'pages' => array(
+						'itemCount' => $res['hits']['total'],
+						'pageCount' => ceil($res['hits']['total'] / $limit['pageSize']),
+						'page' => $limit['page'],
+						'pageSize' => $limit['pageSize']
+					)
+				);
+				$this->redis->setex($redis_key, $this->ttl, json_encode($result));
+			} else {
+				$result = array('list' => array(), 'pages' => array('itemCount' => 0, 'pageCount' => 0, 'page' => $limit['page'], 'pageSize' => $limit['pageSize']));
+			}
+		} else {
+			$result = json_decode($content, true);
+		}
+		return $result;
+	}
+
+	/**
+	 * 取得lmm_travels索引中的内容
+	 * @param $keyword
+	 * @param array $must_not
+	 * @param string $fields
+	 * @param string $like_fields
+	 * @param array $where
+	 * @param array $order_by
+	 * @param array $group_by
+	 * @param array $limit
+	 */
+	public function getTravelData($must_not = array(), $fields = '', $where = array(), $order_by = array(), $group_by = array(), $limit = array(), $range = array())
+	{
+		$_fields = $fields ? '"' . str_replace(',', '","', $fields) . '"' : '';
+		if (!isset($limit['page'])) $limit['page'] = 1;
+		if (!isset($limit['pageSize'])) $limit['pageSize'] = 5;
+		$not_in_query = '';
+		$in_query = '';
+		$order_by_query = '';
+		$group_by_query = '';
+		$range_query = '';
+		if ($where) {
+			$tmp = array();
+			foreach ($where as $k => $v) {
+				$tmp[] = '{"match":{"'.$k.'":"'.$v.'"}}';
+			}
+			$in_query = '"should":[' . implode(',', $tmp) . ']';
+		}
+		if ($must_not) {
+			$tmp = array();
+			foreach ($must_not as $key => $val) {
+				$tmp[] = '{"match":{"'.$key.'":"'.$v.'"}}';
+			}
+			$not_in_query = ($in_query ? ',' : '') . '"must_not":[' . implode(',', $tmp) . ']';
+		}
+		if ($order_by) {
+			$tmp = array();
+			foreach ($order_by as $k => $v) {
+				$tmp[] = '{"' . $k . '":{"order":"' . $v . '"}}';
+			}
+			$order_by_query = implode(',', $tmp);
+		}
+		if ($group_by) {
+			$tmp = array();
+			foreach ($group_by as $v) {
+				$tmp[] = '"group_by_' . $v . '": {"terms": {"field": "' . $v . '"}}';
+			}
+			$group_by_query = implode(',', $tmp);
+		}
+		if (isset($range['start_time']) && isset($range['end_time'])) {
+			$range_query = ',"range":{"publish_time":{"gte":' . $range['start_time'] . ',"lte":' . $range['end_time'] . '}}';
+		}
+		$start = ($limit['page'] - 1) * $limit['pageSize'];
+		$query = '{"query":{"bool":{' . $in_query . $not_in_query . '}' . $range_query . '},"from":' . $start . ',"size":' . $limit['pageSize'] . ',"_source":[' . $_fields . '],"sort":[' . $order_by_query . '],"aggs":{' . $group_by_query . '}}';
+		$res = $this->client->exec('lmm_travels/tr_travel/_search?preference=_primary_first', $query, '', 'POST');
+		if (isset($res['hits']) && count($res['hits']['hits'])) {
+			$result = array(
+				'list' => $res['hits']['hits'],
+				'pages' => array(
+					'itemCount' => $res['hits']['total'],
+					'pageCount' => ceil($res['hits']['total'] / $limit['pageSize']),
+					'page' => $limit['page'],
+					'pageSize' => $limit['pageSize']
+				)
+			);
+		} else {
+			$result = array('list' => array(), 'pages' => array('itemCount' => 0, 'pageCount' => 0, 'page' => $limit['page'], 'pageSize' => $limit['pageSize']));
+		}
+		return $result;
+	}
+
+	/**
+	 * 取得问答的搜索结果,区分社区问答和产品问答
+	 * @param $keyword
+	 * @param $type
+	 * @param $page
+	 * @param $pageSize
+	 */
+	public function getQaQuestion($keyword, $type, $page, $pageSize, $fields = '')
+	{
+		$bool = '"must":[{"match":{"main_status":5}},{"match":{"del_status":0}}';
+		if ($type) {
+			$bool .= '],"should":[{"match":{"content":"' . $keyword . '"}},{"match":{"title":"' . $keyword . '"}},{"match":{"username":"' . $keyword . '"}}]';
+		} else {
+			$bool .= ',{"match":{"title":"' . $keyword . '"}}]';
+		}
+		$filter = $type ? 'exists' : 'missing';
+		$from = ($page - 1) * $pageSize;
+		$query = '{"query": {"bool": {' . $bool . ',"minimum_should_match": 1,"filter": [{"' . $filter . '": {"field": "title"}}]}},"from":' . $from . ',"size":' . $pageSize . ',"sort":{"recommend_status":{"order":"desc"}},"_source":[' . $fields . ']}';
+		$res = $this->client->exec('lmm_qa/qa_question/_search?preference=_primary_first', $query, '', 'POST');
+		$result = array('list' => array(), 'pages' => array('itemCount' => 0, 'pageCount' => 0, 'page' => $page, 'pageSize' => $pageSize));
+		if (isset($res['hits'])) {
+			$itemCount = intval($res['hits']['total']);
+			$pageCount = ceil($itemCount / $pageSize);
+			$result['pages'] = array(
+				'itemCount' => $itemCount,
+				'pageCount' => $pageCount,
+				'page' => $pageCount > 0 && $page > $pageCount ? $pageCount : $page,
+				'pageSize' => $pageSize
+			);
+			foreach ($res['hits']['hits'] as $val) {
+				$result['list'][] = $val['_source'];
+			}
+		}
+		return $result;
+	}
+
+	/**
+	 * 查询vst目的基础数据
+	 * @param $keyword
+	 * @param $like_fields
+	 * @param $fields
+	 * @param $page
+	 * @param $pageSize
+	 * @param $type
+	 * @return array
+	 */
+	public function getVst($keyword, $like_fields, $fields, $where, $filter, $page, $pageSize, $type, $order)
+	{
+		$bool = '';
+		if ($where) {
+			$must = array();
+			foreach (explode(',', $where) as $row) {
+				$tmp = explode(':', $row);
+				if (isset($tmp[1])) $must[] = '{"match":{"' . $tmp[0] . '":"' . $tmp[1] . '"}}';
+			}
+			$bool .= '"must":[' . implode(',', $must) . ']';
+		}
+		if ($filter) {
+			$must_not = array();
+			foreach (explode(',', $filter) as $row) {
+				$tmp = explode(':', $row);
+				if (isset($tmp[1])) $must_not[] = '{"match":{"' . $tmp[0] . '":"' . $tmp[1] . '"}}';
+			}
+			$bool .= ($bool ? ',' : '') . '"must_not":[' . implode(',', $must_not) . ']';
+		}
+		if ($like_fields) {
+			$should = array();
+			foreach (explode(',', $like_fields) as $v) {
+				$should[] = '{"match":{"' . $v . '":"' . $keyword . '"}}';
+			}
+			$bool .= ($bool ? ',' : '') . '"should":[' . implode(',', $should) . '],"minimum_should_match": 1';
+		}
+		$order_string = '';
+		if ($order) {
+			$_order = array();
+			foreach (explode(',', $order) as $row) {
+				$tmp = explode(':', $row);
+				if (isset($tmp[1])) $_order[] = '{"' . $tmp[0] . '": {"order": "' . strtolower($tmp[1]) . '"}}';
+			}
+			$order_string = ',"sort":[' . implode(',', $_order) . ']';
+		}
+		$_source = $fields ? ',"_source":["' . str_replace(',', '","', $fields) . '"]' : '';
+		$from = ($page - 1) * $pageSize;
+		$query = '{"query": {"bool": {' . $bool . '}},"min_score":1,"from":' . $from . ',"size":' . $pageSize . $_source . $order_string . '}';
+		$this->client->exec('es_query_log/logmessage/',json_encode(array(
+			'createtime' => date('Y-m-d H:i:s'),
+			'index' => 'lmm_vst_destination',
+			'content' => $query
+		),JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE), '', 'POST');
+		$res = $this->client->exec('lmm_vst_destination/' . $type . '/_search?preference=_primary_first', $query, '', 'POST');
+		$result = array('list' => array(), 'pages' => array('itemCount' => 0, 'pageCount' => 0, 'page' => $page, 'pageSize' => $pageSize));
+		if (isset($res['hits'])) {
+			$itemCount = intval($res['hits']['total']);
+			$itemCount = $itemCount > 10000 ? 10000 : $itemCount;
+			$pageCount = ceil($itemCount / $pageSize);
+			$result['pages'] = array(
+				'itemCount' => $itemCount,
+				'pageCount' => $pageCount,
+				'page' => $pageCount > 0 && $page > $pageCount ? $pageCount : $page,
+				'pageSize' => $pageSize
+			);
+			foreach ($res['hits']['hits'] as $val) {
+				$result['list'][] = $val['_source'];
+			}
+		}
+		return $result;
+	}
+
+	/**
+	 * 根据目的地推荐热门(小编推荐)
+	 * @param dest_name 目的地名称
+	 * @param dest_type 推荐的类型
+	 * @return array
+	 */
+	private function getDestRecommand($dest_name, $dest_type, $page, $pageSize, $type = 'hot_spot')
+	{
+		$start = ($page - 1) * $pageSize;
+		$query = '{"_source":["dest_id"],"sort": {"recommand": {"order": "asc"}},"from": ' . $start . ',"size": ' . $pageSize . ',"query": {"bool": {"must": [{"match": {"dest_name": "' . $dest_name . '"}}]}}}';
+		$res = $this->client->exec('HotResult/' . $type . '/_search?preference=_primary_first', $query, '','post');
+		$result = array('list' => array(), 'pages' => array('itemCount' => 0, 'pageCount' => 0, 'page' => $page, 'pageSize' => $pageSize));
+		if (isset($res['hits'])) {
+			$itemCount = intval($res['hits']['total']);
+			$itemCount = $itemCount > 10000 ? 10000 : $itemCount;
+			$pageCount = ceil($itemCount / $pageSize);
+			$result['pages'] = array(
+				'itemCount' => $itemCount,
+				'pageCount' => $pageCount,
+				'page' => $pageCount > 0 && $page > $pageCount ? $pageCount : $page,
+				'pageSize' => $pageSize
+			);
+			$result = array('list' => array(), 'pages' => array('itemCount' => 0, 'pageCount' => 0, 'page' => $page, 'pageSize' => $pageSize));
+			foreach ($res['hits']['hits'] as $val) {
+				$result['list'][] = $val['_source'];
+			}
+		}
+		return $result;
+	}
+
+    public function getHotelAroundDest($location, $distance, $from = 0, $size = 10){
+        $query = '{ "sort" : [ { "_geo_distance" : { "location" : { "lat" : '.$location['lat'].', "lon" : '.$location['lon'].' }, "order" : "asc", "unit" : "km" } } ], "query" : { "geo_distance": { "distance": "'.$distance.'", "location": {"lat": '.$location['lat'].', "lon": '.$location['lon'].'} } }, "from" : '.$from.', "size" : '.$size.' }';
+        $res = $this->client->exec('cn_city_location/city/_search', $query, '', 'post');
+        return $res;
+    }
+
+    /**
+     * 获取目的地周边信息
+     * @param $location
+     * @param $distance
+     * @param string $dest_type
+     * @param int $from
+     * @param int $size
+     * @return array
+     */
+    public function getDestAround($location, $distance, $dest_type='HOTEL', $from = 0, $size = 10)
+    {
+        $query = '{ "sort" : [ { "_geo_distance" : { "location" : { "lat" : '.$location['lat'].', "lon" : '.$location['lon'].' }, "order" : "asc", "unit" : "km" } } ], "query" : { "bool": {"must":[{"term":{"dest_type":"' . $dest_type . '"}},{"geo_distance":{ "distance": "'.$distance.'", "location": {"lat": '.$location['lat'].', "lon": '.$location['lon'].'} }}]}  }, "from" : '.$from.', "size" : '.$size.' }';
+        $res = $this->client->exec('lmm_lvyou/ly_destination/_search', $query, '', 'post');
+        return $res;
+    }
+
+
+    /**
+     * 获取目的地周边信息--倒序
+     * @param $location
+     * @param $distance
+     * @param string $dest_type
+     * @param int $from
+     * @param int $size
+     * @return array
+     */
+    public function getDestAroundDesc($location, $distance, $dest_type='HOTEL', $from = 0, $size = 10)
+    {
+        $query = '{ "sort" : [ { "_geo_distance" : { "location" : { "lat" : '.$location['lat'].', "lon" : '.$location['lon'].' }, "order" : "desc", "unit" : "km" } } ], "query" : { "bool": {"must":[{"term":{"dest_type":"' . $dest_type . '"}},{"geo_distance":{ "distance": "'.$distance.'", "location": {"lat": '.$location['lat'].', "lon": '.$location['lon'].'} }}]}  }, "from" : '.$from.', "size" : '.$size.' }';
+        $res = $this->client->exec('lmm_lvyou/ly_destination/_search', $query, '', 'post');
+        return $res;
+    }
+
+
+    /**
+     * 获取目的地周边信息 -- 热销
+     * @param $location
+     * @param $distance
+     * @param string $dest_type
+     * @param int $from
+     * @param int $size
+     * @return array
+     */
+    public function getDestAroundHotSale($location, $distance, $dest_type='HOTEL', $from = 0, $size = 10)
+    {
+        $query = '{ "sort" : [ {"saleAmount": {"order":"desc"}},{ "_geo_distance" : { "location" : { "lat" : '.$location['lat'].', "lon" : '.$location['lon'].' }, "order" : "asc", "unit" : "km" } } ], "query" : { "bool": {"must":[{"term":{"destType":"' . $dest_type . '"}},{"geo_distance":{ "distance": "'.$distance.'", "location": {"lat": '.$location['lat'].', "lon": '.$location['lon'].'} }}]}  }, "from" : '.$from.', "size" : '.$size.' }';
+//        $res = $this->client->exec('lmm_lvyou/ly_destination_product/_search', $query, '', 'post');
+        $res = $this->client->exec('lmm_destination/ly_destination_product/_search', $query, '', 'post');
+        return $res;
+    }
+
+    /**
+     * 获取推荐数据
+     * @param $location
+     * @param $distance
+     * @param int $from
+     * @param int $size
+     * @return array
+     */
+    public function getRecommend($location, $distance, $from = 0, $size = 10)
+    {
+        $query = '{ "sort" : [ {"saleAmount": {"order":"desc"}},{ "_geo_distance" : { "location" : { "lat" : '.$location['lat'].', "lon" : '.$location['lon'].' }, "order" : "asc", "unit" : "km" } } ], "query" : { "bool": {"must":[{"geo_distance":{ "distance": "'.$distance.'", "location": {"lat": '.$location['lat'].', "lon": '.$location['lon'].'} }}]}  }, "from" : '.$from.', "size" : '.$size.' }';
+//        $res = $this->client->exec('lmm_lvyou/ly_destination_product/_search', $query, '', 'post');
+        $res = $this->client->exec('lmm_destination/ly_destination_product/_search', $query, '', 'post');
+        return $res;
+    }
+
+    /**
+     * 获取首屏推荐产品
+     * @param $location
+     * @param $distance
+     * @param int $from
+     * @param int $size
+     * @return array
+     */
+    public function getRecommendHotProduct($location, $distance, $from = 0, $size = 10)
+    {
+        $query = '{ "sort" : [ {"saleAmount": {"order":"asc"}},{ "_geo_distance" : { "location" : { "lat" : '.$location['lat'].', "lon" : '.$location['lon'].' }, "order" : "asc", "unit" : "km" } } ], "query" : { "bool": {"must":[{"geo_distance":{ "distance": "'.$distance.'", "location": {"lat": '.$location['lat'].', "lon": '.$location['lon'].'} }}]}  }, "from" : '.$from.', "size" : '.$size.' }';
+//        $res = $this->client->exec('lmm_lvyou/ly_destination_product/_search', $query, '', 'post');
+        $res = $this->client->exec('lmm_destination/ly_destination_product/_search', $query, '', 'post');
+        return $res;
+    }
+
+    /**
+     * 按照category_id进行排序
+     * @param $city_id
+     * @param $category_id
+     * @param int $from
+     * @param int $size
+     * @return array
+     */
+    public function getPoiRecommendHotProductByCategoryId($city_id ,$category_id, $from = 0, $size = 10)
+    {
+//        $query = '{ "sort" : [ {"saleAmount": {"order":"desc"}} ], "query" : { "bool": {"must":[{"term":{"city_id":"'. $city_id .'"}},{"term":{"category_id":"'. $category_id .'"}}]}  }, "from" : '.$from.', "size" : '.$size.' }';
+        $query = '{ "sort" : [ {"saleAmount": {"order":"desc"}} ], "query" : { "bool": {"must":[{"term":{"city_id":"'. $city_id .'"}},{"term":{"sale_flag":"Y"}},{"term":{"category_id":"'. $category_id .'"}}]}  }, "from" : '.$from.', "size" : '.$size.' }';
+        $res = $this->client->exec('lmm_destination/ly_hotsale_product/_search', $query, '', 'post');
+        return $res;
+    }
+
+    /**
+     * 按照sub_category_id进行排序
+     * @param $city_id
+     * @param $sub_category_id
+     * @param int $from
+     * @param int $size
+     * @return array
+     */
+    public function getPoiRecommendHotProductBySubCategoryId($city_id ,$sub_category_id, $from = 0, $size = 10)
+    {
+//        $query = '{ "sort" : [ {"saleAmount": {"order":"desc"}} ], "query" : { "bool": {"must":[{"term":{"city_id":"'. $city_id .'"}},{"term":{"sub_category_id":"'. $sub_category_id .'"}}]}  }, "from" : '.$from.', "size" : '.$size.' }';
+        $query = '{ "sort" : [ {"saleAmount": {"order":"desc"}} ], "query" : { "bool": {"must":[{"term":{"city_id":"'. $city_id .'"}},{"term":{"sale_flag":"Y"}},{"term":{"sub_category_id":"'. $sub_category_id .'"}}]}  }, "from" : '.$from.', "size" : '.$size.' }';
+        $res = $this->client->exec('lmm_destination/ly_hotsale_product/_search', $query, '', 'post');
+        return $res;
+    }
+
+    /**
+     * 按照category_id进行排序
+     * @param $city_id
+     * @param $category_id
+     * @param int $from
+     * @param int $size
+     * @return array
+     */
+    public function getPoiRecommendHotProductByCategoryIdAndDestId($city_id, $dest_id, $category_id, $from = 0, $size = 10)
+    {
+//        $query = '{ "sort" : [ {"saleAmount": {"order":"desc"}} ], "query" : { "bool": {"must":[{"term":{"city_id":"'. $city_id .'"}},{"term":{"poi_id":"'. $dest_id .'"}},{"term":{"category_id":"'. $category_id .'"}}]}  }, "from" : '.$from.', "size" : '.$size.' }';
+        $query = '{ "sort" : [ {"saleAmount": {"order":"desc"}} ], "query" : { "bool": {"must":[{"term":{"city_id":"'. $city_id .'"}},{"term":{"sale_flag":"Y"}},{"term":{"poi_id":"'. $dest_id .'"}},{"term":{"category_id":"'. $category_id .'"}}]}  }, "from" : '.$from.', "size" : '.$size.' }';
+        $res = $this->client->exec('lmm_destination/ly_hotsale_product/_search', $query, '', 'post');
+        return $res;
+    }
+
+    /**
+     * 按照sub_category_id进行排序
+     * @param $city_id
+     * @param $sub_category_id
+     * @param int $from
+     * @param int $size
+     * @return array
+     */
+    public function getPoiRecommendHotProductBySubCategoryIdAndDestId($city_id, $dest_id, $sub_category_id, $from = 0, $size = 10)
+    {
+//        $query = '{ "sort" : [ {"saleAmount": {"order":"desc"}} ], "query" : { "bool": {"must":[{"term":{"city_id":"'. $city_id .'"}},{"term":{"poi_id":"'. $dest_id .'"}},{"term":{"sub_category_id":"'. $category_id .'"}}]}  }, "from" : '.$from.', "size" : '.$size.' }';
+        $query = '{ "sort" : [ {"saleAmount": {"order":"desc"}} ], "query" : { "bool": {"must":[{"term":{"city_id":"'. $city_id .'"}},{"term":{"sale_flag":"Y"}},{"term":{"poi_id":"'. $dest_id .'"}},{"term":{"sub_category_id":"'. $sub_category_id .'"}}]}  }, "from" : '.$from.', "size" : '.$size.' }';
+        $res = $this->client->exec('lmm_destination/ly_hotsale_product/_search', $query, '', 'post');
+        return $res;
+    }
+
+
+
+
+    public function getHotPoiByDestId($city_id,  $from = 0, $size = 100, $rel_dest_type = 'city_id', $exp_pids = array())
+    {
+//        $query = '{ "sort" : [ {"saleAmount": {"order":"desc"}} ], "query" : { "bool": {"must":[{"term":{"city_id":"'. $city_id .'"}}]}  }, "from" : '.$from.', "size" : '.$size.' }';
+
+        $exp_str = ', "must_not": [ { "term" : { "sale_flag": "N"  } } ]';
+        if($exp_pids){
+            if(is_array($exp_pids) && count($exp_pids) > 1){
+                $exp_pid = implode('","', $exp_pids);
+                $exp_str = ', "must_not": [ { "terms": { "poi_id": ["'.$exp_pid.'"] } }, { "term" : { "sale_flag": "N"  } } ]';
+            }else{
+                $exp_pid = $exp_pids && is_array($exp_pids) ? $exp_pids[0] : $exp_pids;
+                $exp_str = ', "must_not": [ { "term": { "poi_id": "'.$exp_pid.'" } }, { "term" : { "sale_flag": "N"  } }  ]';
+            }
+        }
+
+
+        $query = '{ "sort" : [ {"saleAmount": {"order":"desc"}} ], "query" : { "bool": {"must":[{"term":{"'.$rel_dest_type.'":"'. $city_id .'"}}, { "term": { "category_id": "11" } } ]'.$exp_str.' } }, "from" : '.$from.', "size" : '.$size.' }';
+//        echo $query;die;
+        $res = $this->client->exec('lmm_destination/ly_hotsale_product/_search', $query, '', 'post');
+        return $res;
+    }
+	public function writeLog($data){
+		$data['message']	= isset($data['message']) ? $data['message'] : 'not input parama!';
+		$data['createtime'] = date('Y-m-d H:i:s');
+		$data['dbname']		= isset($data['dbname']) ? $data['dbname'] : 'null';
+		$data['table']		= isset($data['table']) ? $data['table'] : 'null';
+		return $this->client->exec('es_import_log/import_db_data',json_encode($data,JSON_UNESCAPED_UNICODE),array(),'POST');
+	}
+
+
+
+    public function getHotProductSimpleByPoiId($poi_id, $category_id = array(), $exp_pids = array(), $is_sub = 1, $from = 0, $size = 10){
+
+        if($is_sub == 1){
+            $col_name = "sub_category_id";
+        }else{
+            $col_name = "category_id";
+        }
+
+        if($category_id == 'All'){
+            $cate_query_str = '';
+        }else if(is_array($category_id)){
+            $category_ids = implode('","', $category_id);
+            $cate_query_str = ', {"terms": {"'.$col_name.'": ["'.$category_ids.'"]} }';
+        }else{
+            $cate_query_str = ', {"term": {"'.$col_name.'": "'.$category_id.'"]} }';
+        }
+
+        $exp_str = ', "must_not": [ { "term" : { "sale_flag": "N"  } } ]';
+        if($exp_pids){
+            if(is_array($exp_pids) && count($exp_pids) > 1){
+                $exp_pid = implode('","', $exp_pids);
+                $exp_str = ', "must_not": [ { "terms": { "product_id": ["'.$exp_pid.'"] } }, { "term" : { "sale_flag": "N"  } } ]';
+            }else{
+                $exp_pid = $exp_pids && is_array($exp_pids) ? $exp_pids[0] : $exp_pids;
+                $exp_str = ', "must_not": [ { "term": { "product_id": "'.$exp_pid.'" } }, { "term" : { "sale_flag": "N"  } }  ]';
+            }
+        }
+
+        $query = '{ "sort": [ {"saleAmount": {"order": "desc"} }, {"sub_category_id": {"order": "asc"} } ], '.
+            '"query": { "bool": { "must": [ {"term": {"poi_id": "'.$poi_id.'"} }'.$cate_query_str.' ]'.$exp_str.' }  }, "from": '.$from.', "size": '.$size.' }';
+
+//        return $query;
+
+        $res = $this->client->exec('lmm_destination/ly_hotsale_product/_search', $query, '', 'post');
+        return $res;
+
+    }
+
+	/**
+	 * 保存es快照
+	 * @return array
+	 */
+	public function saveSanpShot(){
+		$url = '_snapshot/backup/snapshot'.date('Ymd');
+		$query = '{"type": "fs","settings": {"location": "/mnt/emulation_snapshot/backup","max_snapshot_bytes_per_sec": "50mb","max_restore_bytes_per_sec": "50mb"}}';
+		return $this->client->exec($url,$query,array(),'POST');
+	}
+}

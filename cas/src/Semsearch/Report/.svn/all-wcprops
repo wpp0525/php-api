@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Semsearch/Report
+END
+SogouReportService.php
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Semsearch/Report/SogouReportService.php
+END
+BaiduReportService.php
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Semsearch/Report/BaiduReportService.php
+END
+SanliulingReportService.php
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Semsearch/Report/SanliulingReportService.php
+END
+GetReportRequest.php
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Semsearch/Report/GetReportRequest.php
+END
+ReportServiceIface.php
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Semsearch/Report/ReportServiceIface.php
+END
+ReportRequestType.php
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Semsearch/Report/ReportRequestType.php
+END
+ShenmaReportService.php
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/php-cas/!svn/ver/3538/branches/story97245/cas/src/Semsearch/Report/ShenmaReportService.php
+END

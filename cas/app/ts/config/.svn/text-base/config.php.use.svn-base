@@ -1,0 +1,570 @@
+<?php
+return new \Phalcon\Config ( array (
+    'dbcore' => array (
+        'master' => array (
+            'host' => '192.168.0.139',
+            'username' => 'root',
+            'password' => '123456',
+            'dbname' => 'lmm_core',
+            'charset' => 'utf8',
+            'persistent' => false
+        ),
+        'slaves' => array (
+            array (
+                'host' => '192.168.0.139',
+                'username' => 'root',
+                'password' => '123456',
+                'dbname' => 'lmm_core',
+                'charset' => 'utf8',
+                'persistent' => false
+            )
+        )
+    ),
+    'dblvyou' => array (
+        'master' => array (
+            'host' => '192.168.0.139',
+            'username' => 'root',
+            'password' => '123456',
+            'dbname' => 'lmm_lvyou',
+            'charset' => 'utf8',
+            'persistent' => false
+        ),
+        'slaves' => array (
+            array (
+                'host' => '192.168.0.139',
+                'username' => 'root',
+                'password' => '123456',
+                'dbname' => 'lmm_lvyou',
+                'charset' => 'utf8',
+                'persistent' => false
+            )
+        )
+    ),
+    'dbmodule' => array (
+        'master' => array (
+            'host' => '192.168.0.139',
+            'username' => 'root',
+            'password' => '123456',
+            'dbname' => 'lmm_module',
+            'charset' => 'utf8',
+            'persistent' => false
+        ),
+        'slaves' => array (
+            array (
+                'host' => '192.168.0.139',
+                'username' => 'root',
+                'password' => '123456',
+                'dbname' => 'lmm_module',
+                'charset' => 'utf8',
+                'persistent' => false
+            )
+        )
+    ),
+    'dbmsg' => array (
+        'master' => array (
+            'host' => '192.168.0.139',
+            'username' => 'root',
+            'password' => '123456',
+            'dbname' => 'lmm_message',
+            'charset' => 'utf8',
+            'persistent' => false
+        ),
+        'slaves' => array (
+            array (
+                'host' => '192.168.0.139',
+                'username' => 'root',
+                'password' => '123456',
+                'dbname' => 'lmm_message',
+                'charset' => 'utf8',
+                'persistent' => false
+            )
+        )
+    ),
+    'dbbaike' => array (
+    		'master' => array (
+    			'host' => '192.168.0.139',
+    			'username' => 'root',
+    			'password' => '123456',
+    			'dbname' => 'lmm_baike',
+    			'charset' => 'utf8',
+    			'persistent' => false
+    		),
+    		'slaves' => array (
+    			array (
+    				'host' => '192.168.0.139',
+    				'username' => 'root',
+    				'password' => '123456',
+    				'dbname' => 'lmm_baike',
+    				'charset' => 'utf8',
+    				'persistent' => false
+    			)
+    		)
+    	),
+    	'soap' => array(
+        		'location' => 'http://106.15.35.46/soap/server.php', // 设置server路径
+        		'uri' => 'http://106.15.35.46/soap/server.php',
+        		'login' => 'shenxiang',
+        		'password' => '132564',
+        		'trace' => 1
+        	),
+    'dbnewlvyou' => array (
+        'master' => array (
+            'host' => '10.112.4.221',
+            'username' => 'root',
+            'password' => '123456',
+            'dbname' => 'lmm_destination',
+            'charset' => 'utf8',
+            'persistent' => false
+        )
+    ),
+    'daemon'=>array(
+        'destbase'=>array(
+            'appName'               => 'destbase',
+            'appDir'                => __DIR__ . '/../',
+            'appDescription'        => 'CAS Dest Base Worker Service',
+            'logLocation'           => __DIR__ . '/../logs/destbase/daemon.log',
+            'authorName'            => 'System Daemon',
+            'authorEmail'           => 'root@127.0.0.1',
+            'appPidLocation'        => __DIR__. '/../run/destbase/daemon.pid',
+            'sysMaxExecutionTime'   => 0,
+            'sysMaxInputTime'       => 0,
+            'sysMemoryLimit'        => '1024M',
+            'appRunAsUID' => 1000,
+            'appRunAsGID' => 1000,
+        ),
+        'destdetail'=>array(
+           'state'=>array(
+                'appName'               => 'destdetail-state',
+                'appDir'                => __DIR__ . '/../',
+                'appDescription'        => 'CAS Dest Detail Worker Service',
+                'logLocation'           => __DIR__ . '/../logs/destdetail-state/daemon.log',
+                'authorName'            => 'System Daemon',
+                'authorEmail'           => 'root@127.0.0.1',
+                'appPidLocation'        => __DIR__. '/../run/destdetail-state/daemon.pid',
+                'sysMaxExecutionTime'   => 0,
+                'sysMaxInputTime'       => 0,
+                'sysMemoryLimit'        => '1024M',
+                'appRunAsUID' => 1000,
+                'appRunAsGID' => 1000,
+            ),
+            'country'=>array(
+                'appName'               => 'detail-country',
+                'appDir'                => __DIR__ . '/../',
+                'appDescription'        => 'CAS Dest Detail Worker Service',
+                'logLocation'           => __DIR__ . '/../logs/detail-country/daemon.log',
+                'authorName'            => 'System Daemon',
+                'authorEmail'           => 'root@127.0.0.1',
+                'appPidLocation'        => __DIR__. '/../run/detail-country/daemon.pid',
+                'sysMaxExecutionTime'   => 0,
+                'sysMaxInputTime'       => 0,
+                'sysMemoryLimit'        => '1024M',
+                'appRunAsUID' => 1000,
+                'appRunAsGID' => 1000,
+            ),
+            'city'=>array(
+                'appName'               => 'detail-city',
+                'appDir'                => __DIR__ . '/../',
+                'appDescription'        => 'CAS Dest Detail Worker Service',
+                'logLocation'           => __DIR__ . '/../logs/detail-city/daemon.log',
+                'authorName'            => 'System Daemon',
+                'authorEmail'           => 'root@127.0.0.1',
+                'appPidLocation'        => __DIR__. '/../run/detail-city/daemon.pid',
+                'sysMaxExecutionTime'   => 0,
+                'sysMaxInputTime'       => 0,
+                'sysMemoryLimit'        => '1024M',
+                'appRunAsUID' => 1000,
+                'appRunAsGID' => 1000,
+            ),
+            'province'=>array(
+                'appName'               => 'detail-province',
+                'appDir'                => __DIR__ . '/../',
+                'appDescription'        => 'CAS Dest Detail Worker Service',
+                'logLocation'           => __DIR__ . '/../logs/detail-province/daemon.log',
+                'authorName'            => 'System Daemon',
+                'authorEmail'           => 'root@127.0.0.1',
+                'appPidLocation'        => __DIR__. '/../run/detail-province/daemon.pid',
+                'sysMaxExecutionTime'   => 0,
+                'sysMaxInputTime'       => 0,
+                'sysMemoryLimit'        => '1024M',
+                'appRunAsUID' => 1000,
+                'appRunAsGID' => 1000,
+            ),
+            'county'=>array(
+                'appName'               => 'detail-county',
+                'appDir'                => __DIR__ . '/../',
+                'appDescription'        => 'CAS Dest Detail Worker Service',
+                'logLocation'           => __DIR__ . '/../logs/detail-county/daemon.log',
+                'authorName'            => 'System Daemon',
+                'authorEmail'           => 'root@127.0.0.1',
+                'appPidLocation'        => __DIR__. '/../run/detail-county/daemon.pid',
+                'sysMaxExecutionTime'   => 0,
+                'sysMaxInputTime'       => 0,
+                'sysMemoryLimit'        => '1024M',
+                'appRunAsUID' => 1000,
+                'appRunAsGID' => 1000,
+            ),
+            'town'=>array(
+                'appName'               => 'detail-town',
+                'appDir'                => __DIR__ . '/../',
+                'appDescription'        => 'CAS Dest Detail Worker Service',
+                'logLocation'           => __DIR__ . '/../logs/detail-town/daemon.log',
+                'authorName'            => 'System Daemon',
+                'authorEmail'           => 'root@127.0.0.1',
+                'appPidLocation'        => __DIR__. '/../run/detail-town/daemon.pid',
+                'sysMaxExecutionTime'   => 0,
+                'sysMaxInputTime'       => 0,
+                'sysMemoryLimit'        => '1024M',
+                'appRunAsUID' => 1000,
+                'appRunAsGID' => 1000,
+            ),
+            'scenic'=>array(
+                'appName'               => 'detail-scenic',
+                'appDir'                => __DIR__ . '/../',
+                'appDescription'        => 'CAS Dest Detail Worker Service',
+                'logLocation'           => __DIR__ . '/../logs/detail-scenic/daemon.log',
+                'authorName'            => 'System Daemon',
+                'authorEmail'           => 'root@127.0.0.1',
+                'appPidLocation'        => __DIR__. '/../run/detail-scenic/daemon.pid',
+                'sysMaxExecutionTime'   => 0,
+                'sysMaxInputTime'       => 0,
+                'sysMemoryLimit'        => '1024M',
+                'appRunAsUID' => 1000,
+                'appRunAsGID' => 1000,
+            ),
+            'restaurant'=>array(
+                'appName'               => 'detail-rest',
+                'appDir'                => __DIR__ . '/../',
+                'appDescription'        => 'CAS Dest Detail Worker Service',
+                'logLocation'           => __DIR__ . '/../logs/detail-rest/daemon.log',
+                'authorName'            => 'System Daemon',
+                'authorEmail'           => 'root@127.0.0.1',
+                'appPidLocation'        => __DIR__. '/../run/detail-rest/daemon.pid',
+                'sysMaxExecutionTime'   => 0,
+                'sysMaxInputTime'       => 0,
+                'sysMemoryLimit'        => '1024M',
+                'appRunAsUID' => 1000,
+                'appRunAsGID' => 1000,
+            ),
+            'viewspot'=>array(
+                'appName'               => 'detail-views',
+                'appDir'                => __DIR__ . '/../',
+                'appDescription'        => 'CAS Dest Detail Worker Service',
+                'logLocation'           => __DIR__ . '/../logs/detail-views/daemon.log',
+                'authorName'            => 'System Daemon',
+                'authorEmail'           => 'root@127.0.0.1',
+                'appPidLocation'        => __DIR__. '/../run/detail-views/daemon.pid',
+                'sysMaxExecutionTime'   => 0,
+                'sysMaxInputTime'       => 0,
+                'sysMemoryLimit'        => '1024M',
+                'appRunAsUID' => 1000,
+                'appRunAsGID' => 1000,
+            ),
+            'ent'=>array(
+                'appName'               => 'detail-ent',
+                'appDir'                => __DIR__ . '/../',
+                'appDescription'        => 'CAS Dest Detail Worker Service',
+                'logLocation'           => __DIR__ . '/../logs/detail-ent/daemon.log',
+                'authorName'            => 'System Daemon',
+                'authorEmail'           => 'root@127.0.0.1',
+                'appPidLocation'        => __DIR__. '/../run/detail-ent/daemon.pid',
+                'sysMaxExecutionTime'   => 0,
+                'sysMaxInputTime'       => 0,
+                'sysMemoryLimit'        => '1024M',
+                'appRunAsUID' => 1000,
+                'appRunAsGID' => 1000,
+            ),
+            'shop'=>array(
+                'appName'               => 'detail-shop',
+                'appDir'                => __DIR__ . '/../',
+                'appDescription'        => 'CAS Dest Detail Worker Service',
+                'logLocation'           => __DIR__ . '/../logs/detail-shop/daemon.log',
+                'authorName'            => 'System Daemon',
+                'authorEmail'           => 'root@127.0.0.1',
+                'appPidLocation'        => __DIR__. '/../run/detail-shop/daemon.pid',
+                'sysMaxExecutionTime'   => 0,
+                'sysMaxInputTime'       => 0,
+                'sysMemoryLimit'        => '1024M',
+                'appRunAsUID' => 1000,
+                'appRunAsGID' => 1000,
+            ),
+            'special'=>array(
+                'appName'               => 'detail-special',
+                'appDir'                => __DIR__ . '/../',
+                'appDescription'        => 'CAS Dest Detail Worker Service',
+                'logLocation'           => __DIR__ . '/../logs/detail-special/daemon.log',
+                'authorName'            => 'System Daemon',
+                'authorEmail'           => 'root@127.0.0.1',
+                'appPidLocation'        => __DIR__. '/../run/detail-special/daemon.pid',
+                'sysMaxExecutionTime'   => 0,
+                'sysMaxInputTime'       => 0,
+                'sysMemoryLimit'        => '1024M',
+                'appRunAsUID' => 1000,
+                'appRunAsGID' => 1000,
+            ),
+        ),
+        'destrel'=>array(
+            'country'=>array(
+                'appName'               => 'destrel-country',
+                'appDir'                => __DIR__ . '/../',
+                'appDescription'        => 'CAS Dest Relation Worker Service',
+                'logLocation'           => __DIR__ . '/../logs/destrel-country/daemon.log',
+                'authorName'            => 'System Daemon',
+                'authorEmail'           => 'root@127.0.0.1',
+                'appPidLocation'        => __DIR__. '/../run/destrel-country/daemon.pid',
+                'sysMaxExecutionTime'   => 0,
+                'sysMaxInputTime'       => 0,
+                'sysMemoryLimit'        => '1024M',
+                'appRunAsUID' => 1000,
+                'appRunAsGID' => 1000,
+            ),
+            'province'=>array(
+                'appName'               => 'destrel-province',
+                'appDir'                => __DIR__ . '/../',
+                'appDescription'        => 'CAS Dest Relation Worker Service',
+                'logLocation'           => __DIR__ . '/../logs/destrel-province/daemon.log',
+                'authorName'            => 'System Daemon',
+                'authorEmail'           => 'root@127.0.0.1',
+                'appPidLocation'        => __DIR__. '/../run/destrel-province/daemon.pid',
+                'sysMaxExecutionTime'   => 0,
+                'sysMaxInputTime'       => 0,
+                'sysMemoryLimit'        => '1024M',
+                'appRunAsUID' => 1000,
+                'appRunAsGID' => 1000,
+            ),
+            'city'=>array(
+                'appName'               => 'destrel-city',
+                'appDir'                => __DIR__ . '/../',
+                'appDescription'        => 'CAS Dest Relation Worker Service',
+                'logLocation'           => __DIR__ . '/../logs/destrel-city/daemon.log',
+                'authorName'            => 'System Daemon',
+                'authorEmail'           => 'root@127.0.0.1',
+                'appPidLocation'        => __DIR__. '/../run/destrel-city/daemon.pid',
+                'sysMaxExecutionTime'   => 0,
+                'sysMaxInputTime'       => 0,
+                'sysMemoryLimit'        => '1024M',
+                'appRunAsUID' => 1000,
+                'appRunAsGID' => 1000,
+            ),
+
+            'county'=>array(
+                'appName'               => 'destrel-county',
+                'appDir'                => __DIR__ . '/../',
+                'appDescription'        => 'CAS Dest Relation Worker Service',
+                'logLocation'           => __DIR__ . '/../logs/destrel-county/daemon.log',
+                'authorName'            => 'System Daemon',
+                'authorEmail'           => 'root@127.0.0.1',
+                'appPidLocation'        => __DIR__. '/../run/destrel-county/daemon.pid',
+                'sysMaxExecutionTime'   => 0,
+                'sysMaxInputTime'       => 0,
+                'sysMemoryLimit'        => '1024M',
+                'appRunAsUID' => 1000,
+                'appRunAsGID' => 1000,
+            ),
+
+            'town'=>array(
+                'appName'               => 'destrel-town',
+                'appDir'                => __DIR__ . '/../',
+                'appDescription'        => 'CAS Dest Relation Worker Service',
+                'logLocation'           => __DIR__ . '/../logs/destrel-town/daemon.log',
+                'authorName'            => 'System Daemon',
+                'authorEmail'           => 'root@127.0.0.1',
+                'appPidLocation'        => __DIR__. '/../run/destrel-town/daemon.pid',
+                'sysMaxExecutionTime'   => 0,
+                'sysMaxInputTime'       => 0,
+                'sysMemoryLimit'        => '1024M',
+                'appRunAsUID' => 1000,
+                'appRunAsGID' => 1000,
+            ),
+
+            'scenic'=>array(
+                'appName'               => 'destrel-scenic',
+                'appDir'                => __DIR__ . '/../',
+                'appDescription'        => 'CAS Dest Relation Worker Service',
+                'logLocation'           => __DIR__ . '/../logs/destrel-scenic/daemon.log',
+                'authorName'            => 'System Daemon',
+                'authorEmail'           => 'root@127.0.0.1',
+                'appPidLocation'        => __DIR__. '/../run/destrel-scenic/daemon.pid',
+                'sysMaxExecutionTime'   => 0,
+                'sysMaxInputTime'       => 0,
+                'sysMemoryLimit'        => '1024M',
+                'appRunAsUID' => 1000,
+                'appRunAsGID' => 1000,
+            ),
+
+            'special'=>array(
+                'appName'               => 'destrel-special',
+                'appDir'                => __DIR__ . '/../',
+                'appDescription'        => 'CAS Dest Relation Worker Service',
+                'logLocation'           => __DIR__ . '/../logs/destrel-special/daemon.log',
+                'authorName'            => 'System Daemon',
+                'authorEmail'           => 'root@127.0.0.1',
+                'appPidLocation'        => __DIR__. '/../run/destrel-special/daemon.pid',
+                'sysMaxExecutionTime'   => 0,
+                'sysMaxInputTime'       => 0,
+                'sysMemoryLimit'        => '1024M',
+                'appRunAsUID' => 1000,
+                'appRunAsGID' => 1000,
+            ),
+            'viewspot'=>array(
+                'appName'               => 'destrel-viewspot',
+                'appDir'                => __DIR__ . '/../',
+                'appDescription'        => 'CAS Dest Relation Worker Service',
+                'logLocation'           => __DIR__ . '/../logs/destrel-viewspot/daemon.log',
+                'authorName'            => 'System Daemon',
+                'authorEmail'           => 'root@127.0.0.1',
+                'appPidLocation'        => __DIR__. '/../run/destrel-viewspot/daemon.pid',
+                'sysMaxExecutionTime'   => 0,
+                'sysMaxInputTime'       => 0,
+                'sysMemoryLimit'        => '1024M',
+                'appRunAsUID' => 1000,
+                'appRunAsGID' => 1000,
+            ),
+            'ent'=>array(
+                'appName'               => 'destrel-ent',
+                'appDir'                => __DIR__ . '/../',
+                'appDescription'        => 'CAS Dest Relation Worker Service',
+                'logLocation'           => __DIR__ . '/../logs/destrel-ent/daemon.log',
+                'authorName'            => 'System Daemon',
+                'authorEmail'           => 'root@127.0.0.1',
+                'appPidLocation'        => __DIR__. '/../run/destrel-ent/daemon.pid',
+                'sysMaxExecutionTime'   => 0,
+                'sysMaxInputTime'       => 0,
+                'sysMemoryLimit'        => '1024M',
+                'appRunAsUID' => 1000,
+                'appRunAsGID' => 1000,
+            ),
+            'shop'=>array(
+                'appName'               => 'destrel-shop',
+                'appDir'                => __DIR__ . '/../',
+                'appDescription'        => 'CAS Dest Relation Worker Service',
+                'logLocation'           => __DIR__ . '/../logs/destrel-shop/daemon.log',
+                'authorName'            => 'System Daemon',
+                'authorEmail'           => 'root@127.0.0.1',
+                'appPidLocation'        => __DIR__. '/../run/destrel-shop/daemon.pid',
+                'sysMaxExecutionTime'   => 0,
+                'sysMaxInputTime'       => 0,
+                'sysMemoryLimit'        => '1024M',
+                'appRunAsUID' => 1000,
+                'appRunAsGID' => 1000,
+            ),
+            'restaurant'=>array(
+                'appName'               => 'destrel-rest',
+                'appDir'                => __DIR__ . '/../',
+                'appDescription'        => 'CAS Dest Relation Worker Service',
+                'logLocation'           => __DIR__ . '/../logs/destrel-rest/daemon.log',
+                'authorName'            => 'System Daemon',
+                'authorEmail'           => 'root@127.0.0.1',
+                'appPidLocation'        => __DIR__. '/../run/destrel-rest/daemon.pid',
+                'sysMaxExecutionTime'   => 0,
+                'sysMaxInputTime'       => 0,
+                'sysMemoryLimit'        => '1024M',
+                'appRunAsUID' => 1000,
+                'appRunAsGID' => 1000,
+            ),
+        ),
+        'image'=>array(
+            'imagedest'=>array(
+                'appName'               => 'image-dest',
+                'appDir'                => __DIR__ . '/../',
+                'appDescription'        => 'CAS Dest Image Relation Worker Service',
+                'logLocation'           => __DIR__ . '/../logs/image-dest/daemon.log',
+                'authorName'            => 'System Daemon',
+                'authorEmail'           => 'root@127.0.0.1',
+                'appPidLocation'        => __DIR__. '/../run/image-dest/daemon.pid',
+                'sysMaxExecutionTime'   => 0,
+                'sysMaxInputTime'       => 0,
+                'sysMemoryLimit'        => '1024M',
+                'appRunAsUID' => 1000,
+                'appRunAsGID' => 1000,
+            ),
+        ),
+        'trip'=>array(
+            'triprelation'=>array(
+                'appName'               => 'trip-dest',
+                'appDir'                => __DIR__ . '/../',
+                'appDescription'        => 'CAS Dest Trip Relation Worker Service',
+                'logLocation'           => __DIR__ . '/../logs/trip-dest/daemon.log',
+                'authorName'            => 'System Daemon',
+                'authorEmail'           => 'root@127.0.0.1',
+                'appPidLocation'        => __DIR__. '/../run/trip-dest/daemon.pid',
+                'sysMaxExecutionTime'   => 0,
+                'sysMaxInputTime'       => 0,
+                'sysMemoryLimit'        => '1024M',
+                'appRunAsUID' => 1000,
+                'appRunAsGID' => 1000,
+            ),
+            'tracerelation'=>array(
+                'appName'               => 'trace-dest',
+                'appDir'                => __DIR__ . '/../',
+                'appDescription'        => 'CAS Dest trace Relation Worker Service',
+                'logLocation'           => __DIR__ . '/../logs/trace-dest/daemon.log',
+                'authorName'            => 'System Daemon',
+                'authorEmail'           => 'root@127.0.0.1',
+                'appPidLocation'        => __DIR__. '/../run/trace-dest/daemon.pid',
+                'sysMaxExecutionTime'   => 0,
+                'sysMaxInputTime'       => 0,
+                'sysMemoryLimit'        => '1024M',
+                'appRunAsUID' => 1000,
+                'appRunAsGID' => 1000,
+            ),
+        ),
+    ),
+    'redis'=> array(
+        'parameters' => array('host'=>"10.112.4.221","port"=>'6379'),
+        'options' => array()
+    ),
+    'beanstalk' => array(
+        'host' => '172.17.10.205',
+        'port' => 11300
+    ),
+    'elasticsearch' => array(
+	'host' => '10.200.2.82',
+	'port' => 9200
+    ),
+    'ca' => array(
+	'api_uri' => 'http://ca.lvmama.com',
+	'token_key' => 'lvmamma',
+	'secure_key' => 'lvmamma'
+    ),
+    'ca2' => array(
+	'api_uri' => 'http://ca2.lvmama.com',
+	'token_key' => 'lvmamma',
+	'secure_key' => 'lvmamma'
+    ),
+    'application' => array (
+        'appDir' => __DIR__ . '/../',
+        'sourceDir' => __DIR__ . '/../../../src/',
+        'libraryDir' => __DIR__ . '/../../../lib/',
+        'incubatorDir' => __DIR__ . '/../../../../vendor/phalcon/incubator/Library/Phalcon/',
+        'baseUri' => '/',
+        'debug' => true
+    ),
+    'kafka' => array(
+        'esConsume' => array(
+            'groupId'                   => 'myConsumerGroup1', //同一个group的consume消费同一个topic（多partition情况下）
+            'brokerList'                => '10.200.2.86:9092',//逗号相隔
+            'topics'                    => array('canal-test'),
+        ),
+        'redisConsume' => array(
+            'groupId'                   => 'myConsumerGroup2', //同一个group的consume消费同一个topic（多partition情况下）
+            'brokerList'                => '10.200.2.86:9092',//逗号相隔
+            'topics'                    => array('canal-test'),
+        ),
+	'vstConsume' => array(
+		'groupId'                   => 'myConsumerGroup2', //同一个group的consume消费同一个topic（多partition情况下）
+		'brokerList'                => '10.200.2.86:9092',//逗号相隔
+		'topics'                    => array('canal-vst-test'),
+	)
+    ),
+    'db2es' => array(
+		'index'		=> 'db2es',
+		'type'		=> 'kafka_real_time',
+		'mappings'	=> '{"mappings": {"kafka_real_time": {"properties":{
+			"createtime": {"type": "date","format": "yyyy-MM-dd HH:mm:ss"},
+			"dbname": {"type": "string","index": "not_analyzed"},
+			"message": {"type": "string"},
+			"topic_name": {"type": "string","index": "not_analyzed"},
+			"table": {"type": "string","index": "not_analyzed"}
+		}}}}'
+	)
+) );
